@@ -1,0 +1,17 @@
+# Ignore node modules
+node_modules/
+
+# Ignore environment files
+.env
+
+# Ignore local environment overrides
+.env.local
+
+# Ignore build output
+public/uploads/temp/
+
+# Ignore log files
+*.log
+
+# Ignore system files
+.DS_Store

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Peminjaman Proyektor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-video text-indigo-600 text-xl sm:text-2xl mr-2 sm:mr-3"></i>
+                    <h1 class="text-base sm:text-xl font-bold text-gray-800">Peminjaman Proyektor</h1>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/" class="text-gray-600 hover:text-indigo-600 transition duration-200">
+                        <i class="fas fa-home mr-1"></i> Home
+                    </a>
+                    <a href="/dashboard" class="text-gray-600 hover:text-indigo-600 transition duration-200">
+                        <i class="fas fa-chart-line mr-1"></i> Dashboard
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobileMenuBtn" class="text-gray-600 hover:text-indigo-600 focus:outline-none transition">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <div class="px-4 pt-2 pb-4 space-y-2">
+                <a href="/" class="block px-4 py-3 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition duration-200">
+                    <i class="fas fa-home w-6 mr-2"></i> Home
+                </a>
+                <a href="/dashboard" class="block px-4 py-3 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition duration-200">
+                    <i class="fas fa-chart-line w-6 mr-2"></i> Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+                Sistem Peminjaman Proyektor
+            </h2>
+            <p class="text-gray-600 text-lg">
+                Kelola peminjaman proyektor kampus dengan mudah dan efisien
+            </p>
+        </div>
+
+        <!-- Cards -->
+        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <!-- Card Peminjaman -->
+            <div class="bg-white rounded-xl shadow-xl p-8 hover:shadow-2xl transition-all transform hover:-translate-y-2">
+                <div class="text-center">
+                    <div class="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-hand-holding text-green-600 text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Pinjam Proyektor</h3>
+                    <p class="text-gray-600 mb-6">
+                        Ajukan peminjaman proyektor untuk keperluan kuliah atau acara kampus
+                    </p>
+                    <a href="/peminjaman" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-8 rounded-lg transition inline-block">
+                        <i class="fas fa-plus-circle mr-2"></i>
+                        Buat Peminjaman
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card Pengembalian -->
+            <div class="bg-white rounded-xl shadow-xl p-8 hover:shadow-2xl transition-all transform hover:-translate-y-2">
+                <div class="text-center">
+                    <div class="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-undo text-blue-600 text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Kembalikan Proyektor</h3>
+                    <p class="text-gray-600 mb-6">
+                        Proses pengembalian proyektor dan update status peminjaman
+                    </p>
+                    <a href="/pengembalian" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg transition inline-block">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        Proses Pengembalian
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Card Booking -->
+            <div class="bg-white rounded-xl shadow-xl p-8 hover:shadow-2xl transition-all transform hover:-translate-y-2">
+                <div class="text-center">
+                    <div class="bg-purple-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-calendar-check text-purple-600 text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-3">Booking Proyektor</h3>
+                    <p class="text-gray-600 mb-6">
+                        Booking proyektor untuk jadwal yang akan datang
+                    </p>
+                    <a href="/booking" class="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-8 rounded-lg transition inline-block">
+                        <i class="fas fa-calendar-plus mr-2"></i>
+                        Buat Booking
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="mt-16 bg-white rounded-xl shadow-lg p-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+                <i class="fas fa-chart-bar mr-2"></i>Statistik Peminjaman
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6" id="stats">
+                <div class="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
+                    <p class="text-3xl font-bold text-purple-600" id="totalPeminjaman">0</p>
+                    <p class="text-gray-600 text-sm mt-1">Total Peminjaman</p>
+                </div>
+                <div class="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg">
+                    <p class="text-3xl font-bold text-green-600" id="peminjamanAktif">0</p>
+                    <p class="text-gray-600 text-sm mt-1">Sedang Dipinjam</p>
+                </div>
+                <div class="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
+                    <p class="text-3xl font-bold text-blue-600" id="peminjamanSelesai">0</p>
+                    <p class="text-gray-600 text-sm mt-1">Sudah Dikembalikan</p>
+                </div>
+                <div class="text-center p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg">
+                    <p class="text-3xl font-bold text-orange-600" id="hariIni">0</p>
+                    <p class="text-gray-600 text-sm mt-1">Peminjaman Hari Ini</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fitur Unggulan -->
+        <div class="mt-16">
+            <h3 class="text-3xl font-bold text-gray-800 mb-8 text-center">
+                <i class="fas fa-star mr-2 text-yellow-500"></i>Fitur Unggulan
+            </h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-xl transition">
+                    <div class="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-mobile-alt text-indigo-600 text-2xl"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mb-2">Notifikasi WhatsApp</h4>
+                    <p class="text-gray-600 text-sm">Pemberitahuan otomatis melalui WhatsApp dengan foto bukti</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-xl transition">
+                    <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-file-pdf text-red-600 text-2xl"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mb-2">Export Laporan</h4>
+                    <p class="text-gray-600 text-sm">Export data ke PDF dan Excel untuk keperluan administrasi</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-xl transition">
+                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-qrcode text-green-600 text-2xl"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mb-2">QR Code</h4>
+                    <p class="text-gray-600 text-sm">Generate QR Code untuk setiap transaksi peminjaman</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-xl transition">
+                    <div class="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-line text-yellow-600 text-2xl"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mb-2">Analytics</h4>
+                    <p class="text-gray-600 text-sm">Dashboard analytics dengan grafik interaktif real-time</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informasi Proyektor -->
+        <div class="mt-16 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg p-8 text-white">
+            <h3 class="text-3xl font-bold mb-6 text-center">
+                <i class="fas fa-video mr-2"></i>Proyektor Tersedia
+            </h3>
+            <div class="grid md:grid-cols-3 gap-6" id="proyektorList">
+                <div class="text-center">
+                    <div class="bg-white bg-opacity-20 rounded-lg p-4">
+                        <i class="fas fa-spinner fa-spin text-3xl mb-2"></i>
+                        <p>Memuat data proyektor...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cara Penggunaan -->
+        <div class="mt-16 bg-white rounded-xl shadow-lg p-8">
+            <h3 class="text-3xl font-bold text-gray-800 mb-8 text-center">
+                <i class="fas fa-info-circle mr-2 text-indigo-600"></i>Cara Penggunaan
+            </h3>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="bg-gradient-to-br from-green-400 to-green-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg">
+                        1
+                    </div>
+                    <h4 class="font-bold text-lg text-gray-800 mb-2">Buat Peminjaman</h4>
+                    <p class="text-gray-600 text-sm">Isi form peminjaman dengan data lengkap dan upload foto bukti peminjaman</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-gradient-to-br from-blue-400 to-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg">
+                        2
+                    </div>
+                    <h4 class="font-bold text-lg text-gray-800 mb-2">Gunakan Proyektor</h4>
+                    <p class="text-gray-600 text-sm">Gunakan proyektor sesuai keperluan. Notifikasi WhatsApp otomatis dikirim</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-gradient-to-br from-purple-400 to-purple-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg">
+                        3
+                    </div>
+                    <h4 class="font-bold text-lg text-gray-800 mb-2">Kembalikan</h4>
+                    <p class="text-gray-600 text-sm">Proses pengembalian dengan upload foto bukti pengembalian proyektor</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ketentuan -->
+        <div class="mt-16 bg-yellow-50 border-l-4 border-yellow-500 rounded-lg p-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-exclamation-triangle text-yellow-500 mr-3"></i>
+                Ketentuan Peminjaman
+            </h3>
+            <ul class="space-y-3 text-gray-700">
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                    <span>Mahasiswa harus mengisi form peminjaman dengan lengkap termasuk NIM, nama, kelas, dan mata kuliah</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                    <span>Wajib menyertakan foto bukti saat peminjaman dan pengembalian proyektor</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                    <span>Proyektor harus dikembalikan sesuai jadwal yang telah ditentukan</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                    <span>Bertanggung jawab atas kerusakan atau kehilangan proyektor selama masa peminjaman</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                    <span>Nomor telepon yang aktif diperlukan untuk menerima notifikasi WhatsApp</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Database Mode Info -->
+        <div class="mt-8 text-center">
+            <div class="inline-flex items-center bg-white rounded-full px-6 py-3 shadow-md" id="dbModeInfo">
+                <i class="fas fa-database mr-2 text-indigo-600"></i>
+                <span class="text-gray-700 font-medium">Database Mode: <span id="dbModeText" class="font-bold text-indigo-600">Loading...</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white mt-12 py-6 shadow-inner">
+        <div class="text-center text-gray-600">
+            <p>&copy; 2025 Sistem Peminjaman Proyektor Kampus</p>
+        </div>
+    </footer>
+
+    <script>
+        // Load statistics
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/peminjaman');
+                const data = await response.json();
+                
+                const today = new Date().toDateString();
+                const totalPeminjaman = data.length;
+                const peminjamanAktif = data.filter(item => item.status === 'dipinjam').length;
+                const peminjamanSelesai = data.filter(item => item.status === 'dikembalikan').length;
+                const hariIni = data.filter(item => {
+                    const itemDate = new Date(item.tanggalPeminjaman).toDateString();
+                    return itemDate === today;
+                }).length;
+                
+                document.getElementById('totalPeminjaman').textContent = totalPeminjaman;
+                document.getElementById('peminjamanAktif').textContent = peminjamanAktif;
+                document.getElementById('peminjamanSelesai').textContent = peminjamanSelesai;
+                document.getElementById('hariIni').textContent = hariIni;
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Load proyektor list
+        async function loadProyektor() {
+            try {
+                const response = await fetch('/api/proyektor');
+                const result = await response.json();
+                const proyektor = result.data || [];
+                
+                const proyektorList = document.getElementById('proyektorList');
+                
+                if (proyektor.length === 0) {
+                    proyektorList.innerHTML = `
+                        <div class="col-span-3 text-center">
+                            <p class="text-white text-opacity-80">Belum ada data proyektor</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                proyektorList.innerHTML = proyektor.map(p => `
+                    <div class="bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-6 hover:bg-opacity-30 transition">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-bold text-lg">${p.kode}</h4>
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold ${
+                                p.status === 'tersedia' ? 'bg-green-400 text-green-900' : 
+                                p.status === 'dipinjam' ? 'bg-red-400 text-red-900' : 
+                                'bg-gray-400 text-gray-900'
+                            }">
+                                ${p.status === 'tersedia' ? '✓ Tersedia' : 
+                                  p.status === 'dipinjam' ? '⊗ Dipinjam' : 
+                                  '⚠ ' + p.status}
+                            </span>
+                        </div>
+                        <p class="text-sm mb-1"><i class="fas fa-tag mr-2"></i>${p.jenis}</p>
+                        <p class="text-sm mb-1"><i class="fas fa-cube mr-2"></i>${p.merk}</p>
+                        <p class="text-sm text-white text-opacity-80 mt-2">
+                            <i class="fas fa-history mr-2"></i>Dipinjam: ${p.totalPeminjaman || 0}x
+                        </p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading proyektor:', error);
+                document.getElementById('proyektorList').innerHTML = `
+                    <div class="col-span-3 text-center">
+                        <p class="text-white text-opacity-80">Gagal memuat data proyektor</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Check database mode
+        async function checkDbMode() {
+            try {
+                // Cek dari server response atau localStorage
+                const dbMode = '<%= typeof dbMode !== "undefined" ? dbMode : "production" %>';
+                const dbModeText = document.getElementById('dbModeText');
+                const dbModeInfo = document.getElementById('dbModeInfo');
+                
+                if (dbMode === 'simulation') {
+                    dbModeText.textContent = '🧪 Simulation (Local JSON)';
+                    dbModeInfo.classList.add('bg-yellow-100', 'border-2', 'border-yellow-400');
+                } else {
+                    dbModeText.textContent = '☁️ Production (MongoDB Cloud)';
+                    dbModeInfo.classList.add('bg-green-100', 'border-2', 'border-green-400');
+                }
+            } catch (error) {
+                console.error('Error checking DB mode:', error);
+            }
+        }
+        
+        // Initialize
+        loadStats();
+        loadProyektor();
+        checkDbMode();
+        
+        // Auto refresh stats every 30 seconds
+        setInterval(() => {
+            loadStats();
+            loadProyektor();
+        }, 30000);
+
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isHidden = mobileMenu.classList.contains('hidden');
+                    
+                    if (isHidden) {
+                        mobileMenu.classList.remove('hidden');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-times text-2xl"></i>';
+                    } else {
+                        mobileMenu.classList.add('hidden');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
+                    }
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                        mobileMenu.classList.add('hidden');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
+                    }
+                });
+
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

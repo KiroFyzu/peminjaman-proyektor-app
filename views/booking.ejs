@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Proyektor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-pink-100 min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-calendar-check text-purple-600 text-xl sm:text-2xl mr-2 sm:mr-3"></i>
+                    <h1 class="text-base sm:text-xl font-bold text-gray-800">Booking Proyektor</h1>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/" class="text-gray-600 hover:text-purple-600 transition duration-200">
+                        <i class="fas fa-home mr-1"></i> Home
+                    </a>
+                    <a href="/peminjaman" class="text-gray-600 hover:text-purple-600 transition duration-200">
+                        <i class="fas fa-plus mr-1"></i> Peminjaman
+                    </a>
+                    <a href="/pengembalian" class="text-gray-600 hover:text-purple-600 transition duration-200">
+                        <i class="fas fa-undo mr-1"></i> Pengembalian
+                    </a>
+                    <a href="/dashboard" class="text-gray-600 hover:text-purple-600 transition duration-200">
+                        <i class="fas fa-chart-line mr-1"></i> Dashboard
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobileMenuBtn" class="text-gray-600 hover:text-purple-600 focus:outline-none transition">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <div class="px-4 pt-2 pb-4 space-y-2">
+                <a href="/" class="block px-4 py-3 text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition duration-200">
+                    <i class="fas fa-home w-6 mr-2"></i> Home
+                </a>
+                <a href="/peminjaman" class="block px-4 py-3 text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition duration-200">
+                    <i class="fas fa-plus w-6 mr-2"></i> Peminjaman
+                </a>
+                <a href="/pengembalian" class="block px-4 py-3 text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition duration-200">
+                    <i class="fas fa-undo w-6 mr-2"></i> Pengembalian
+                </a>
+                <a href="/dashboard" class="block px-4 py-3 text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition duration-200">
+                    <i class="fas fa-chart-line w-6 mr-2"></i> Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Form Booking -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl shadow-2xl p-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                        <i class="fas fa-calendar-plus mr-2 text-purple-600"></i>Form Booking
+                    </h2>
+                    
+                    <form id="bookingForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap *</label>
+                            <input type="text" name="nama" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">NIM</label>
+                            <input type="text" name="nim"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Kelas</label>
+                            <input type="text" name="kelas"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Proyektor *</label>
+                            <select name="merkProyektor" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                                <option value="">Pilih Proyektor</option>
+                                <option value="Epson EB-X41">Epson EB-X41</option>
+                                <option value="Epson EB-S41">Epson EB-S41</option>
+                                <option value="BenQ MX535">BenQ MX535</option>
+                                <option value="BenQ MS535A">BenQ MS535A</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal *</label>
+                            <input type="date" name="tanggalBooking" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Jam Mulai *</label>
+                                <input type="time" name="jamMulai" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Jam Selesai *</label>
+                                <input type="time" name="jamSelesai" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Keperluan</label>
+                            <textarea name="keperluan" rows="3"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">No. Telepon/WhatsApp</label>
+                            <input type="text" name="noTelepon" placeholder="08xxx atau 628xxx"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                        </div>
+                        
+                        <button type="submit"
+                            class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg hover:from-purple-700 hover:to-pink-700 transition font-semibold">
+                            <i class="fas fa-check mr-2"></i>Booking Sekarang
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- List Booking -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl shadow-2xl p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">
+                            <i class="fas fa-list mr-2 text-purple-600"></i>Daftar Booking
+                        </h2>
+                        <select id="statusFilter" class="px-4 py-2 border border-gray-300 rounded-lg">
+                            <option value="semua">Semua Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    
+                    <div id="bookingList" class="space-y-4">
+                        <!-- Booking cards will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load bookings
+        async function loadBookings() {
+            try {
+                const response = await fetch('/api/booking');
+                const bookings = await response.json();
+                displayBookings(bookings);
+            } catch (error) {
+                console.error('Error loading bookings:', error);
+            }
+        }
+        
+        // Display bookings
+        function displayBookings(bookings) {
+            const container = document.getElementById('bookingList');
+            const filter = document.getElementById('statusFilter').value;
+            
+            let filtered = bookings;
+            if (filter !== 'semua') {
+                filtered = bookings.filter(b => b.status === filter);
+            }
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-500">Belum ada booking</p>';
+                return;
+            }
+            
+            container.innerHTML = filtered.reverse().map(booking => {
+                const statusColors = {
+                    pending: 'bg-yellow-100 text-yellow-700',
+                    approved: 'bg-green-100 text-green-700',
+                    rejected: 'bg-red-100 text-red-700',
+                    completed: 'bg-blue-100 text-blue-700'
+                };
+                
+                const statusLabels = {
+                    pending: 'Menunggu',
+                    approved: 'Disetujui',
+                    rejected: 'Ditolak',
+                    completed: 'Selesai'
+                };
+                
+                return `
+                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <h3 class="font-bold text-lg text-gray-800">${booking.nama}</h3>
+                                <p class="text-sm text-gray-600">${booking.nim} - ${booking.kelas}</p>
+                                <div class="mt-2 space-y-1 text-sm">
+                                    <p><i class="fas fa-video text-purple-600 w-5"></i> ${booking.merkProyektor}</p>
+                                    <p><i class="fas fa-calendar text-purple-600 w-5"></i> ${new Date(booking.tanggalBooking).toLocaleDateString('id-ID')}</p>
+                                    <p><i class="fas fa-clock text-purple-600 w-5"></i> ${booking.jamMulai} - ${booking.jamSelesai}</p>
+                                    ${booking.keperluan !== '-' ? `<p><i class="fas fa-info-circle text-purple-600 w-5"></i> ${booking.keperluan}</p>` : ''}
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end gap-2">
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold ${statusColors[booking.status]}">
+                                    ${statusLabels[booking.status]}
+                                </span>
+                                ${booking.status === 'pending' ? `
+                                    <div class="flex gap-2">
+                                        <button onclick="updateStatus('${booking.id}', 'approved')" 
+                                            class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button onclick="updateStatus('${booking.id}', 'rejected')" 
+                                            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                ` : ''}
+                                <button onclick="deleteBooking('${booking.id}')" 
+                                    class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-xs">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Submit booking
+        document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            
+            try {
+                const response = await fetch('/api/booking', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ ' + result.message);
+                    e.target.reset();
+                    loadBookings();
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch (error) {
+                alert('❌ Terjadi kesalahan: ' + error.message);
+            }
+        });
+        
+        // Update booking status
+        async function updateStatus(id, status) {
+            if (!confirm(`Yakin ingin ${status === 'approved' ? 'menyetujui' : 'menolak'} booking ini?`)) return;
+            
+            try {
+                const response = await fetch(`/api/booking/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ ' + result.message);
+                    loadBookings();
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch (error) {
+                alert('❌ Terjadi kesalahan: ' + error.message);
+            }
+        }
+        
+        // Delete booking
+        async function deleteBooking(id) {
+            if (!confirm('Yakin ingin menghapus booking ini?')) return;
+            
+            try {
+                const response = await fetch(`/api/booking/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ ' + result.message);
+                    loadBookings();
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch (error) {
+                alert('❌ Terjadi kesalahan: ' + error.message);
+            }
+        }
+        
+        // Filter handler
+        document.getElementById('statusFilter').addEventListener('change', loadBookings);
+        
+        // Set min date to today
+        document.querySelector('[name="tanggalBooking"]').min = new Date().toISOString().split('T')[0];
+        
+        // Load on page load
+        loadBookings();
+
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isHidden = mobileMenu.classList.contains('hidden');
+                    
+                    if (isHidden) {
+                        mobileMenu.classList.remove('hidden');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-times text-2xl"></i>';
+                    } else {
+                        mobileMenu.classList.add('hidden');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
+                    }
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                        mobileMenu.classList.add('hidden');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
+                    }
+                });
+
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

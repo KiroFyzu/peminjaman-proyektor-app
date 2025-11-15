@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Peminjaman</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-video text-indigo-600 text-xl sm:text-2xl mr-2 sm:mr-3"></i>
+                    <h1 class="text-base sm:text-xl font-bold text-gray-800">Peminjaman Proyektor</h1>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/" class="text-gray-600 hover:text-indigo-600 transition duration-200">
+                        <i class="fas fa-home mr-1"></i> Home
+                    </a>
+                    <a href="/peminjaman" class="text-gray-600 hover:text-indigo-600 transition duration-200">
+                        <i class="fas fa-plus mr-1"></i> Peminjaman
+                    </a>
+                    <a href="/pengembalian" class="text-gray-600 hover:text-indigo-600 transition duration-200">
+                        <i class="fas fa-undo mr-1"></i> Pengembalian
+                    </a>
+                    <a href="/booking" class="text-gray-600 hover:text-indigo-600 transition duration-200">
+                        <i class="fas fa-calendar-check mr-1"></i> Booking
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobileMenuBtn" class="text-gray-600 hover:text-indigo-600 focus:outline-none transition">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <div class="px-4 pt-2 pb-4 space-y-2">
+                <a href="/" class="block px-4 py-3 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition duration-200">
+                    <i class="fas fa-home w-6 mr-2"></i> Home
+                </a>
+                <a href="/peminjaman" class="block px-4 py-3 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition duration-200">
+                    <i class="fas fa-plus w-6 mr-2"></i> Peminjaman
+                </a>
+                <a href="/pengembalian" class="block px-4 py-3 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition duration-200">
+                    <i class="fas fa-undo w-6 mr-2"></i> Pengembalian
+                </a>
+                <a href="/booking" class="block px-4 py-3 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition duration-200">
+                    <i class="fas fa-calendar-check w-6 mr-2"></i> Booking
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-8 lg:py-12">
+        <div class="bg-white rounded-xl shadow-2xl p-4 sm:p-6 lg:p-8 xl:p-12">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 sm:mb-6 lg:mb-8">
+                <div class="w-full md:w-auto mb-3 md:mb-0">
+                    <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800">
+                        <i class="fas fa-chart-line mr-2"></i>Dashboard Peminjaman
+                    </h2>
+                    <p class="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">Kelola dan pantau semua peminjaman proyektor</p>
+                </div>
+                <div class="w-full md:w-auto">
+                    <select id="filterStatus" class="w-full md:w-auto px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                        <option value="semua">Semua Status</option>
+                        <option value="dipinjam">Sedang Dipinjam</option>
+                        <option value="dikembalikan">Sudah Dikembalikan</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-3 sm:p-4 lg:p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-xs sm:text-sm text-gray-600">Total Peminjaman</p>
+                        <i class="fas fa-clipboard-list text-purple-400 text-base sm:text-lg lg:text-xl"></i>
+                    </div>
+                    <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-purple-600"><%= peminjaman.length %></p>
+                    <p class="text-xs text-gray-500 mt-1">Semua waktu</p>
+                </div>
+                <div class="bg-gradient-to-br from-green-50 to-green-100 p-3 sm:p-4 lg:p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-xs sm:text-sm text-gray-600">Sedang Dipinjam</p>
+                        <i class="fas fa-box-open text-green-400 text-base sm:text-lg lg:text-xl"></i>
+                    </div>
+                    <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-green-600"><%= peminjaman.filter(p => p.status === 'dipinjam').length %></p>
+                    <p class="text-xs text-gray-500 mt-1">Aktif sekarang</p>
+                </div>
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-3 sm:p-4 lg:p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-xs sm:text-sm text-gray-600">Sudah Dikembalikan</p>
+                        <i class="fas fa-check-circle text-blue-400 text-base sm:text-lg lg:text-xl"></i>
+                    </div>
+                    <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-600"><%= peminjaman.filter(p => p.status === 'dikembalikan').length %></p>
+                    <p class="text-xs text-gray-500 mt-1">Selesai</p>
+                </div>
+                <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-3 sm:p-4 lg:p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-xs sm:text-sm text-gray-600">Hari Ini</p>
+                        <i class="fas fa-calendar-day text-orange-400 text-base sm:text-lg lg:text-xl"></i>
+                    </div>
+                    <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-orange-600">
+                        <%= peminjaman.filter(p => new Date(p.tanggalPeminjaman).toDateString() === new Date().toDateString()).length %>
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1"><%= new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) %></p>
+                </div>
+            </div>
+
+            <!-- Additional Info Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                <!-- Proyektor Paling Sering Dipinjam -->
+                <div class="bg-white border-2 border-indigo-100 rounded-xl p-6 shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-indigo-100 p-3 rounded-lg mr-3">
+                            <i class="fas fa-trophy text-indigo-600 text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-700">Proyektor Terpopuler</h3>
+                    </div>
+                    <%
+                        const proyektorCount = {};
+                        peminjaman.forEach(p => {
+                            proyektorCount[p.merkProyektor] = (proyektorCount[p.merkProyektor] || 0) + 1;
+                        });
+                        const mostPopular = Object.entries(proyektorCount).sort((a, b) => b[1] - a[1])[0];
+                    %>
+                    <% if (mostPopular) { %>
+                        <p class="text-2xl font-bold text-indigo-600"><%= mostPopular[0] %></p>
+                        <p class="text-sm text-gray-500"><%= mostPopular[1] %>x dipinjam</p>
+                    <% } else { %>
+                        <p class="text-gray-400">Belum ada data</p>
+                    <% } %>
+                </div>
+
+                <!-- Minggu Ini -->
+                <div class="bg-white border-2 border-green-100 rounded-xl p-6 shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-lg mr-3">
+                            <i class="fas fa-calendar-week text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-700">Minggu Ini</h3>
+                    </div>
+                    <%
+                        const weekAgo = new Date();
+                        weekAgo.setDate(weekAgo.getDate() - 7);
+                        const thisWeek = peminjaman.filter(p => new Date(p.tanggalPeminjaman) >= weekAgo).length;
+                    %>
+                    <p class="text-2xl font-bold text-green-600"><%= thisWeek %></p>
+                    <p class="text-sm text-gray-500">peminjaman baru</p>
+                </div>
+
+                <!-- Bulan Ini -->
+                <div class="bg-white border-2 border-purple-100 rounded-xl p-6 shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-purple-100 p-3 rounded-lg mr-3">
+                            <i class="fas fa-calendar-alt text-purple-600 text-xl"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-700">Bulan Ini</h3>
+                    </div>
+                    <%
+                        const thisMonth = peminjaman.filter(p => {
+                            const date = new Date(p.tanggalPeminjaman);
+                            const now = new Date();
+                            return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+                        }).length;
+                    %>
+                    <p class="text-2xl font-bold text-purple-600"><%= thisMonth %></p>
+                    <p class="text-sm text-gray-500"><%= new Date().toLocaleDateString('id-ID', { month: 'long' }) %></p>
+                </div>
+            </div>
+
+            <!-- Aktivitas Terbaru & Status Proyektor -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                <!-- Aktivitas Terbaru -->
+                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 shadow-md">
+                    <h3 class="font-bold text-lg text-gray-700 mb-4 flex items-center">
+                        <i class="fas fa-clock text-blue-600 mr-2"></i>
+                        Aktivitas Terbaru
+                    </h3>
+                    <div class="space-y-3 max-h-64 overflow-y-auto">
+                        <% peminjaman.slice(0, 5).forEach((item) => { %>
+                            <div class="bg-white p-3 rounded-lg shadow-sm border-l-4 <%= item.status === 'dipinjam' ? 'border-green-500' : 'border-blue-500' %>">
+                                <div class="flex justify-between items-start">
+                                    <div class="flex-1">
+                                        <p class="font-semibold text-sm text-gray-800"><%= item.nama %></p>
+                                        <p class="text-xs text-gray-500"><%= item.merkProyektor %> • <%= item.kelas || '-' %></p>
+                                    </div>
+                                    <span class="text-xs <%= item.status === 'dipinjam' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700' %> px-2 py-1 rounded-full font-semibold">
+                                        <%= item.status === 'dipinjam' ? '📦 Dipinjam' : '✅ Kembali' %>
+                                    </span>
+                                </div>
+                                <p class="text-xs text-gray-400 mt-1">
+                                    <i class="far fa-clock mr-1"></i>
+                                    <%= new Date(item.tanggalPeminjaman).toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) %>
+                                </p>
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+
+                <!-- Status Proyektor -->
+                <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 shadow-md">
+                    <h3 class="font-bold text-lg text-gray-700 mb-4 flex items-center">
+                        <i class="fas fa-video text-purple-600 mr-2"></i>
+                        Status Proyektor
+                    </h3>
+                    <div class="space-y-3">
+                        <% if (proyektor && proyektor.length > 0) { %>
+                            <% 
+                                // Count peminjaman per proyektor
+                                const proyektorPeminjamanCount = {};
+                                peminjaman.forEach(p => {
+                                    const key = p.merkProyektor;
+                                    proyektorPeminjamanCount[key] = (proyektorPeminjamanCount[key] || 0) + 1;
+                                });
+                            %>
+                            <% proyektor.forEach(proj => { %>
+                                <% 
+                                    const proyektorName = `${proj.merk} ${proj.model}`;
+                                    const dipinjam = peminjaman.find(p => 
+                                        p.merkProyektor === proyektorName && p.status === 'dipinjam'
+                                    );
+                                    const statusColor = dipinjam ? 'red' : 'green';
+                                    const statusText = dipinjam ? '🔴 Dipinjam' : '🟢 Tersedia';
+                                %>
+                                <div class="bg-white p-4 rounded-lg shadow-sm flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <div class="bg-<%= statusColor %>-100 p-2 rounded-lg mr-3">
+                                            <i class="fas fa-video text-<%= statusColor %>-600"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold text-sm text-gray-800">
+                                                <%= proj.kode %> - <%= proyektorName %>
+                                            </p>
+                                            <p class="text-xs text-gray-500">
+                                                <%= proyektorPeminjamanCount[proyektorName] || 0 %>x total peminjaman
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-<%= statusColor %>-100 text-<%= statusColor %>-700">
+                                        <%= statusText %>
+                                    </span>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="text-center text-gray-400 py-4">
+                                <i class="fas fa-inbox text-3xl mb-2"></i>
+                                <p class="text-sm">Belum ada data proyektor</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search & Export Section -->
+            <div class="mb-6 sm:mb-8 space-y-3 sm:space-y-4">
+                <!-- Bulk Actions Bar (Hidden by default) -->
+                <div id="bulkActionsBar" class="hidden bg-indigo-50 border-2 border-indigo-200 rounded-lg p-3 md:p-4">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <div class="flex items-center gap-2 sm:gap-4">
+                            <i class="fas fa-check-circle text-indigo-600 text-lg sm:text-xl"></i>
+                            <span class="font-semibold text-gray-700 text-sm sm:text-base">
+                                <span id="selectedCount">0</span> item dipilih
+                            </span>
+                        </div>
+                        <div class="flex gap-2 w-full sm:w-auto">
+                            <button onclick="hapusMultiple()" 
+                                class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm">
+                                <i class="fas fa-trash mr-1 sm:mr-2"></i><span class="hidden xs:inline">Hapus </span>Terpilih
+                            </button>
+                            <button onclick="clearSelection()" 
+                                class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition text-sm">
+                                <i class="fas fa-times mr-1 sm:mr-2"></i>Batal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="flex flex-col md:flex-row gap-3 sm:gap-4">
+                    <div class="flex-1">
+                        <input type="text" id="searchInput" placeholder="🔍 Cari nama, NIM, kelas, dosen, atau proyektor..."
+                            class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <button onclick="searchData()" 
+                        class="w-full md:w-auto px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                        <i class="fas fa-search mr-2"></i>Cari
+                    </button>
+                </div>
+                
+                <!-- Advanced Filters -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                    <select id="proyektorFilter" class="px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg">
+                        <option value="semua">Semua Proyektor</option>
+                        <% if (proyektor && proyektor.length > 0) { %>
+                            <% proyektor.forEach(p => { %>
+                                <option value="<%= p.merk %> <%= p.model %>">
+                                    <%= p.kode %> - <%= p.merk %> <%= p.model %>
+                                </option>
+                            <% }); %>
+                        <% } %>
+                    </select>
+                    
+                    <input type="date" id="startDate" placeholder="Dari Tanggal"
+                        class="px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg">
+                    
+                    <input type="date" id="endDate" placeholder="Sampai Tanggal"
+                        class="px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg">
+                    
+                    <button onclick="resetFilters()" 
+                        class="px-3 sm:px-4 py-2 text-sm sm:text-base bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition">
+                        <i class="fas fa-redo mr-2"></i>Reset
+                    </button>
+                </div>
+                
+                <!-- Export Buttons -->
+                <div class="flex flex-wrap gap-2 sm:gap-4">
+                    <button onclick="exportPDF()" 
+                        class="flex-1 sm:flex-none px-4 sm:px-6 py-2 sm:py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm">
+                        <i class="fas fa-file-pdf mr-1 sm:mr-2"></i>Export PDF
+                    </button>
+                    <button onclick="exportExcel()" 
+                        class="flex-1 sm:flex-none px-4 sm:px-6 py-2 sm:py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm">
+                        <i class="fas fa-file-excel mr-1 sm:mr-2"></i>Export Excel
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-x-auto -mx-4 sm:mx-0">
+                <div class="inline-block min-w-full align-middle">
+                <table class="min-w-full w-full">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 w-12">
+                                <input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)" 
+                                    class="w-5 h-5 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                            </th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Nama</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Kelas</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 hidden md:table-cell">Dosen</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 hidden lg:table-cell">Jam Kuliah</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Proyektor</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700 hidden md:table-cell">Waktu</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
+                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <% if (peminjaman.length === 0) { %>
+                            <tr>
+                                <td colspan="9" class="px-4 py-8 text-center text-gray-500">
+                                    <i class="fas fa-inbox text-4xl mb-2"></i>
+                                    <p>Belum ada data peminjaman</p>
+                                </td>
+                            </tr>
+                        <% } else { %>
+                            <% peminjaman.reverse().forEach((item) => { %>
+                                <tr class="border-b hover:bg-gray-50 transition data-row" data-status="<%= item.status %>" data-id="<%= item.id %>">
+                                    <td class="px-4 py-4 text-sm">
+                                        <input type="checkbox" class="row-checkbox w-5 h-5 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500 cursor-pointer" 
+                                            data-id="<%= item.id %>" onchange="updateSelection()">
+                                    </td>
+                                    <td class="px-4 py-4 text-sm"><%= item.nama %></td>
+                                    <td class="px-4 py-4 text-sm"><%= item.kelas || '-' %></td>
+                                    <td class="px-4 py-4 text-sm hidden md:table-cell"><%= item.namaDosen || '-' %></td>
+                                    <td class="px-4 py-4 text-sm hidden lg:table-cell"><%= item.jamKuliah || '-' %></td>
+                                    <td class="px-4 py-4 text-sm"><%= item.merkProyektor %></td>
+                                    <td class="px-4 py-4 text-sm hidden md:table-cell">
+                                        <div class="text-xs">
+                                            <p><strong>Pinjam:</strong> <%= new Date(item.tanggalPeminjaman).toLocaleDateString('id-ID') %></p>
+                                            <% if (item.jamSelesai) { %>
+                                                <p><strong>Kembali:</strong> <%= item.jamSelesai %></p>
+                                            <% } %>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4 text-sm">
+                                        <% if (item.status === 'dipinjam') { %>
+                                            <span class="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
+                                                Dipinjam
+                                            </span>
+                                        <% } else { %>
+                                            <span class="bg-blue-100 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full">
+                                                Dikembalikan
+                                            </span>
+                                        <% } %>
+                                    </td>
+                                    <td class="px-2 sm:px-4 py-3 sm:py-4 text-sm">
+                                        <div class="flex flex-wrap gap-1 sm:gap-2">
+                                            <button onclick="lihatDetail(this)" 
+                                                data-item='<%- JSON.stringify(item) %>'
+                                                class="bg-indigo-500 hover:bg-indigo-600 text-white px-2 sm:px-3 py-1 rounded text-xs transition"
+                                                title="Lihat Detail">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button onclick="showQR('<%= item.id %>')" 
+                                                class="bg-purple-500 hover:bg-purple-600 text-white px-2 sm:px-3 py-1 rounded text-xs transition"
+                                                title="Lihat QR Code">
+                                                <i class="fas fa-qrcode"></i>
+                                            </button>
+                                            <% if (item.noTelepon && item.noTelepon !== '-') { %>
+                                                <% if (item.status === 'dipinjam') { %>
+                                                    <button onclick="kirimReminder('<%= item.id %>')" 
+                                                        class="bg-yellow-500 hover:bg-yellow-600 text-white px-2 sm:px-3 py-1 rounded text-xs transition"
+                                                        title="Kirim Reminder">
+                                                        <i class="fab fa-whatsapp"></i>
+                                                    </button>
+                                                <% } else { %>
+                                                    <button onclick="kirimWhatsApp('<%= item.id %>')" 
+                                                        class="bg-green-500 hover:bg-green-600 text-white px-2 sm:px-3 py-1 rounded text-xs transition"
+                                                        title="Kirim WhatsApp">
+                                                        <i class="fab fa-whatsapp"></i>
+                                                    </button>
+                                                <% } %>
+                                            <% } %>
+                                            <button onclick="hapusData('<%= item.id %>')" 
+                                                class="bg-red-500 hover:bg-red-600 text-white px-2 sm:px-3 py-1 rounded text-xs transition"
+                                                title="Hapus Data">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } %>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detail -->
+    <div id="modalDetail" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-4 sm:p-6 md:p-8">
+                <div class="flex justify-between items-center mb-4 sm:mb-6">
+                    <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800">
+                        <i class="fas fa-info-circle text-indigo-500 mr-1 sm:mr-2"></i>Detail Peminjaman
+                    </h3>
+                    <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 text-xl sm:text-2xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div id="detailContent" class="space-y-4">
+                    <!-- Content will be injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Multiple selection functionality
+        function toggleSelectAll(checkbox) {
+            const checkboxes = document.querySelectorAll('.row-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = checkbox.checked;
+            });
+            updateSelection();
+        }
+
+        function updateSelection() {
+            const checkboxes = document.querySelectorAll('.row-checkbox:checked');
+            const count = checkboxes.length;
+            const bulkActionsBar = document.getElementById('bulkActionsBar');
+            const selectedCount = document.getElementById('selectedCount');
+            const selectAll = document.getElementById('selectAll');
+            
+            if (count > 0) {
+                bulkActionsBar.classList.remove('hidden');
+                selectedCount.textContent = count;
+            } else {
+                bulkActionsBar.classList.add('hidden');
+            }
+            
+            // Update select all checkbox
+            const allCheckboxes = document.querySelectorAll('.row-checkbox');
+            selectAll.checked = count === allCheckboxes.length && allCheckboxes.length > 0;
+            selectAll.indeterminate = count > 0 && count < allCheckboxes.length;
+        }
+
+        function clearSelection() {
+            const checkboxes = document.querySelectorAll('.row-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = false;
+            });
+            document.getElementById('selectAll').checked = false;
+            updateSelection();
+        }
+
+        async function hapusMultiple() {
+            const checkboxes = document.querySelectorAll('.row-checkbox:checked');
+            const count = checkboxes.length;
+            
+            if (count === 0) return;
+            
+            if (!confirm(`Yakin ingin menghapus ${count} data yang dipilih?`)) {
+                return;
+            }
+            
+            const ids = Array.from(checkboxes).map(cb => cb.dataset.id);
+            let successCount = 0;
+            let failCount = 0;
+            
+            // Show loading notification
+            showNotification(`🔄 Menghapus ${count} data...`, 'info');
+            
+            // Delete all selected items
+            for (const id of ids) {
+                try {
+                    const response = await fetch(`/api/peminjaman/${id}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        successCount++;
+                        // Remove row from table
+                        const row = document.querySelector(`tr[data-id="${id}"]`);
+                        if (row) {
+                            row.style.opacity = '0';
+                            row.style.transform = 'translateX(-20px)';
+                            setTimeout(() => row.remove(), 300);
+                        }
+                    } else {
+                        failCount++;
+                    }
+                } catch (error) {
+                    failCount++;
+                    console.error('Error deleting:', error);
+                }
+            }
+            
+            // Update stats after deletion
+            setTimeout(async () => {
+                await updateStats();
+                clearSelection();
+                
+                if (failCount === 0) {
+                    showNotification(`✅ Berhasil menghapus ${successCount} data`, 'success');
+                } else {
+                    showNotification(`⚠️ ${successCount} berhasil, ${failCount} gagal dihapus`, 'warning');
+                }
+            }, 500);
+        }
+
+        // Filter functionality
+        document.getElementById('filterStatus').addEventListener('change', function() {
+            const filter = this.value;
+            const rows = document.querySelectorAll('.data-row');
+            
+            rows.forEach(row => {
+                if (filter === 'semua') {
+                    row.style.display = '';
+                } else {
+                    if (row.dataset.status === filter) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+            
+            // Clear selection when filtering
+            clearSelection();
+        });
+
+        function lihatDetail(button) {
+            const data = JSON.parse(button.getAttribute('data-item'));
+            const detailContent = document.getElementById('detailContent');
+            const tanggalPinjam = new Date(data.tanggalPeminjaman).toLocaleString('id-ID');
+            const tanggalKembali = data.tanggalPengembalian ? new Date(data.tanggalPengembalian).toLocaleString('id-ID') : '-';
+            
+            detailContent.innerHTML = `
+                <div class="grid md:grid-cols-2 gap-4 sm:gap-6">
+                    <div class="space-y-3 sm:space-y-4">
+                        <h4 class="font-bold text-base sm:text-lg text-gray-700 border-b pb-2">Data Peminjam</h4>
+                        <div class="space-y-2 text-xs sm:text-sm">
+                            <p><i class="fas fa-user w-6 text-indigo-500"></i><strong>Nama:</strong> ${data.nama}</p>
+                            <p><i class="fas fa-chalkboard w-6 text-indigo-500"></i><strong>Kelas:</strong> ${data.kelas || '-'}</p>
+                            <p><i class="fas fa-user-tie w-6 text-indigo-500"></i><strong>Dosen:</strong> ${data.namaDosen || '-'}</p>
+                            <p><i class="fas fa-clock w-6 text-indigo-500"></i><strong>Jam Kuliah:</strong> ${data.jamKuliah || '-'}</p>
+                            <p><i class="fas fa-phone w-6 text-indigo-500"></i><strong>No. Telp:</strong> ${data.noTelepon}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3 sm:space-y-4">
+                        <h4 class="font-bold text-base sm:text-lg text-gray-700 border-b pb-2">Data Peminjaman</h4>
+                        <div class="space-y-2 text-xs sm:text-sm">
+                            <p><i class="fas fa-video w-6 text-indigo-500"></i><strong>Proyektor:</strong> ${data.merkProyektor}</p>
+                            <p><i class="fas fa-calendar w-6 text-indigo-500"></i><strong>Tanggal Pinjam:</strong> ${tanggalPinjam}</p>
+                            <p><i class="fas fa-clock w-6 text-indigo-500"></i><strong>Jam Selesai:</strong> ${data.jamSelesai || '-'}</p>
+                            <p><i class="fas fa-calendar-check w-6 text-indigo-500"></i><strong>Tanggal Kembali:</strong> ${tanggalKembali}</p>
+                            <p><i class="fas fa-info-circle w-6 text-indigo-500"></i><strong>Status:</strong> 
+                                <span class="bg-${data.status === 'dipinjam' ? 'green' : 'blue'}-100 text-${data.status === 'dipinjam' ? 'green' : 'blue'}-700 px-2 py-1 rounded text-xs font-semibold">
+                                    ${data.status === 'dipinjam' ? 'Sedang Dipinjam' : 'Dikembalikan'}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t">
+                    <h4 class="font-bold text-base sm:text-lg text-gray-700 mb-3 sm:mb-4">Foto Bukti</h4>
+                    <div class="grid md:grid-cols-2 gap-3 sm:gap-4">
+                        <div>
+                            <p class="text-sm font-semibold mb-2 text-gray-600">Foto Peminjaman:</p>
+                            <img src="${data.fotoPeminjaman}" alt="Foto Peminjaman" class="w-full rounded-lg border-2 border-gray-300">
+                        </div>
+                        ${data.fotoPengembalian ? `
+                            <div>
+                                <p class="text-sm font-semibold mb-2 text-gray-600">Foto Pengembalian:</p>
+                                <img src="${data.fotoPengembalian}" alt="Foto Pengembalian" class="w-full rounded-lg border-2 border-gray-300">
+                            </div>
+                        ` : '<div class="flex items-center justify-center text-gray-400"><p>Belum dikembalikan</p></div>'}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('modalDetail').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modalDetail').classList.add('hidden');
+        }
+
+        async function hapusData(id) {
+            if (!confirm('Yakin ingin menghapus data peminjaman ini?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/peminjaman/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Hapus row dari table tanpa refresh
+                    const rows = document.querySelectorAll('.data-row');
+                    rows.forEach(row => {
+                        const button = row.querySelector(`button[onclick*="${id}"]`);
+                        if (button) {
+                            row.remove();
+                        }
+                    });
+                    
+                    // Update statistik secara realtime
+                    await updateStats();
+                    
+                    // Show success notification
+                    showNotification('✅ Data berhasil dihapus', 'success');
+                } else {
+                    showNotification('❌ Gagal menghapus data', 'error');
+                }
+            } catch (error) {
+                showNotification('❌ Terjadi kesalahan: ' + error.message, 'error');
+            }
+        }
+
+        // Update statistik secara realtime
+        async function updateStats() {
+            try {
+                const response = await fetch('/api/peminjaman');
+                const data = await response.json();
+                
+                // Update cards
+                const totalEl = document.querySelector('.from-purple-50 .text-3xl');
+                const dipinjamEl = document.querySelector('.from-green-50 .text-3xl');
+                const dikembalikanEl = document.querySelector('.from-blue-50 .text-3xl');
+                const hariIniEl = document.querySelector('.from-orange-50 .text-3xl');
+                
+                if (totalEl) totalEl.textContent = data.length;
+                if (dipinjamEl) dipinjamEl.textContent = data.filter(p => p.status === 'dipinjam').length;
+                if (dikembalikanEl) dikembalikanEl.textContent = data.filter(p => p.status === 'dikembalikan').length;
+                
+                const today = new Date().toDateString();
+                const hariIniCount = data.filter(p => new Date(p.tanggalPeminjaman).toDateString() === today).length;
+                if (hariIniEl) hariIniEl.textContent = hariIniCount;
+                
+                // Update info cards
+                const weekAgo = new Date();
+                weekAgo.setDate(weekAgo.getDate() - 7);
+                const thisWeek = data.filter(p => new Date(p.tanggalPeminjaman) >= weekAgo).length;
+                
+                const thisMonth = data.filter(p => {
+                    const date = new Date(p.tanggalPeminjaman);
+                    const now = new Date();
+                    return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+                }).length;
+                
+                // Update proyektor terpopuler
+                const proyektorCount = {};
+                data.forEach(p => {
+                    proyektorCount[p.merkProyektor] = (proyektorCount[p.merkProyektor] || 0) + 1;
+                });
+                const mostPopular = Object.entries(proyektorCount).sort((a, b) => b[1] - a[1])[0];
+                
+                // Check if table is empty after delete
+                const tableBody = document.getElementById('tableBody');
+                if (tableBody && tableBody.querySelectorAll('.data-row').length === 0) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="9" class="px-4 py-8 text-center text-gray-500">
+                                <i class="fas fa-inbox text-4xl mb-2"></i>
+                                <p>Belum ada data peminjaman</p>
+                            </td>
+                        </tr>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error updating stats:', error);
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            const bgColors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                warning: 'bg-yellow-500',
+                info: 'bg-blue-500'
+            };
+            notification.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg transform transition-all duration-300 ${
+                bgColors[type] || 'bg-gray-500'
+            } text-white font-semibold`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 10);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        async function kirimWhatsApp(id) {
+            if (!confirm('Kirim pesan WhatsApp ke peminjam?')) {
+                return;
+            }
+            
+            // Show loading
+            const button = event.target.closest('button');
+            const originalHTML = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            button.disabled = true;
+            
+            try {
+                const response = await fetch(`/api/send-whatsapp/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('✅ ' + result.message, 'success');
+                } else {
+                    showNotification('❌ ' + result.message, 'error');
+                }
+            } catch (error) {
+                showNotification('❌ Terjadi kesalahan: ' + error.message, 'error');
+            } finally {
+                button.innerHTML = originalHTML;
+                button.disabled = false;
+            }
+        }
+
+        async function kirimReminder(id) {
+            if (!confirm('Kirim reminder pengembalian ke peminjam?')) {
+                return;
+            }
+            
+            // Show loading
+            const button = event.target.closest('button');
+            const originalHTML = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            button.disabled = true;
+            
+            try {
+                const response = await fetch(`/api/send-reminder/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                // Debug: Log response status
+                console.log('Response Status:', response.status);
+                console.log('Response OK:', response.ok);
+                
+                const result = await response.json();
+                console.log('Result:', result);
+                
+                if (result.success) {
+                    showNotification('✅ ' + result.message, 'success');
+                } else {
+                    showNotification('❌ ' + result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('❌ Terjadi kesalahan: ' + error.message, 'error');
+            } finally {
+                button.innerHTML = originalHTML;
+                button.disabled = false;
+            }
+        }
+        
+        // ============= PHASE 1 FEATURES =============
+        
+        // Export PDF
+        function exportPDF() {
+            window.open('/api/export/pdf', '_blank');
+        }
+        
+        // Export Excel
+        function exportExcel() {
+            window.location.href = '/api/export/excel';
+        }
+        
+        // Show QR Code
+        async function showQR(id) {
+            try {
+                const response = await fetch(`/api/qr/${id}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    const modal = document.createElement('div');
+                    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+                    modal.innerHTML = `
+                        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md">
+                            <div class="text-center">
+                                <h3 class="text-2xl font-bold text-gray-800 mb-4">
+                                    <i class="fas fa-qrcode text-purple-600 mr-2"></i>QR Code Peminjaman
+                                </h3>
+                                <img src="${result.qrCode}" alt="QR Code" class="mx-auto mb-4 border-4 border-gray-200 rounded-lg">
+                                <p class="text-sm text-gray-600 mb-4">Scan QR Code untuk melihat detail peminjaman</p>
+                                <button onclick="this.closest('.fixed').remove()" 
+                                    class="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                                    <i class="fas fa-times mr-2"></i>Tutup
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch (error) {
+                alert('❌ Terjadi kesalahan: ' + error.message);
+            }
+        }
+        
+        // Advanced Search
+        async function searchData() {
+            const query = document.getElementById('searchInput').value;
+            const status = document.getElementById('filterStatus').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const proyektor = document.getElementById('proyektorFilter').value;
+            
+            try {
+                const response = await fetch('/api/search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query, status, startDate, endDate, proyektor })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    updateTable(result.data);
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch (error) {
+                alert('❌ Terjadi kesalahan: ' + error.message);
+            }
+        }
+        
+        // Update table with search results
+        function updateTable(data) {
+            const tbody = document.querySelector('tbody');
+            
+            if (data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="px-4 py-8 text-center text-gray-500">
+                            <i class="fas fa-search text-4xl mb-2"></i>
+                            <p>Tidak ada data yang cocok</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = data.map(item => `
+                <tr class="border-b hover:bg-gray-50 transition data-row" data-status="${item.status}" data-id="${item.id}">
+                    <td class="px-4 py-4 text-sm">
+                        <input type="checkbox" class="row-checkbox w-5 h-5 text-indigo-600 rounded focus:ring-2 focus:ring-indigo-500 cursor-pointer" 
+                            data-id="${item.id}" onchange="updateSelection()">
+                    </td>
+                    <td class="px-4 py-4 text-sm">${item.nama}</td>
+                    <td class="px-4 py-4 text-sm">${item.kelas || '-'}</td>
+                    <td class="px-4 py-4 text-sm hidden md:table-cell">${item.namaDosen || '-'}</td>
+                    <td class="px-4 py-4 text-sm hidden lg:table-cell">${item.jamKuliah || '-'}</td>
+                    <td class="px-4 py-4 text-sm">${item.merkProyektor}</td>
+                    <td class="px-4 py-4 text-sm hidden md:table-cell">
+                        <div class="text-xs">
+                            <p><strong>Pinjam:</strong> ${new Date(item.tanggalPeminjaman).toLocaleDateString('id-ID')}</p>
+                            ${item.jamSelesai ? `<p><strong>Kembali:</strong> ${item.jamSelesai}</p>` : ''}
+                        </div>
+                    </td>
+                    <td class="px-4 py-4 text-sm">
+                        ${item.status === 'dipinjam' 
+                            ? '<span class="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">Dipinjam</span>'
+                            : '<span class="bg-blue-100 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full">Dikembalikan</span>'}
+                    </td>
+                    <td class="px-2 sm:px-4 py-3 sm:py-4 text-sm">
+                        <div class="flex flex-wrap gap-1 sm:gap-2">
+                            <button onclick="lihatDetail(this)" data-item='${JSON.stringify(item).replace(/'/g, "&#39;")}'
+                                class="bg-indigo-500 hover:bg-indigo-600 text-white px-2 sm:px-3 py-1 rounded text-xs transition" title="Lihat Detail">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button onclick="showQR('${item.id}')" 
+                                class="bg-purple-500 hover:bg-purple-600 text-white px-2 sm:px-3 py-1 rounded text-xs transition" title="Lihat QR Code">
+                                <i class="fas fa-qrcode"></i>
+                            </button>
+                            ${item.noTelepon && item.noTelepon !== '-' ? (
+                                item.status === 'dipinjam' 
+                                    ? `<button onclick="kirimReminder('${item.id}')" class="bg-yellow-500 hover:bg-yellow-600 text-white px-2 sm:px-3 py-1 rounded text-xs transition" title="Kirim Reminder"><i class="fab fa-whatsapp"></i></button>`
+                                    : `<button onclick="kirimWhatsApp('${item.id}')" class="bg-green-500 hover:bg-green-600 text-white px-2 sm:px-3 py-1 rounded text-xs transition" title="Kirim WhatsApp"><i class="fab fa-whatsapp"></i></button>`
+                            ) : ''}
+                            <button onclick="hapusData('${item.id}')" 
+                                class="bg-red-500 hover:bg-red-600 text-white px-2 sm:px-3 py-1 rounded text-xs transition" title="Hapus Data">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterStatus').value = 'semua';
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            document.getElementById('proyektorFilter').value = 'semua';
+            window.location.reload();
+        }
+        
+        // Enter key for search
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchData();
+        });
+
+        // Mobile menu toggle - Wait for DOM to be ready
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isHidden = mobileMenu.classList.contains('hidden');
+                    
+                    if (isHidden) {
+                        mobileMenu.classList.remove('hidden');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-times text-2xl"></i>';
+                    } else {
+                        mobileMenu.classList.add('hidden');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
+                    }
+                });
+
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                        mobileMenu.classList.add('hidden');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
+                    }
+                });
+
+                // Close mobile menu when clicking a link
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
