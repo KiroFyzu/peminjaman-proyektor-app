@@ -8,6 +8,7 @@
     "role": "admin",
     "email": "admin@example.com",
     "noTelepon": "-",
+    "rfidUid": "E3:9E:F0:2C",
     "createdAt": "2025-12-13T04:57:07.419Z",
     "updatedAt": "2025-12-13T04:57:07.420Z"
   },
@@ -20,6 +21,7 @@
     "role": "mahasiswa",
     "email": "mahasiswa@example.com",
     "noTelepon": "081234567890",
+    "rfidUid": "FC:62:3C:02",
     "createdAt": "2025-12-13T04:57:07.475Z",
     "updatedAt": "2025-12-13T04:57:07.475Z"
   }

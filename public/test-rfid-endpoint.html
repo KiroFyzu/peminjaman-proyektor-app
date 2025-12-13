@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test RFID Endpoint</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .test-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .test-card h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .uid-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .quick-test-btns {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .quick-btn {
+            padding: 8px 16px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quick-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .response-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .response-card.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .response-card.success {
+            border-left: 5px solid #28a745;
+            background: #d4edda;
+        }
+
+        .response-card.error {
+            border-left: 5px solid #dc3545;
+            background: #f8d7da;
+        }
+
+        .response-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .response-icon {
+            font-size: 2em;
+        }
+
+        .response-title {
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .response-data {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .data-row:last-child {
+            border-bottom: none;
+        }
+
+        .data-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .data-value {
+            color: #6c757d;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            border-left: 5px solid #0c5460;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .info-box strong {
+            color: #0c5460;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔖 Test RFID Endpoint</h1>
+        <p class="subtitle">Simulasi pengiriman UID dari ESP32 ke server</p>
+
+        <div class="test-card">
+            <h3>Test Custom UID</h3>
+            <div class="uid-input-group">
+                <input type="text" id="customUid" placeholder="Contoh: 12:34:56:78" value="12:34:56:78">
+                <button onclick="testRfid()">📤 Kirim</button>
+            </div>
+            
+            <h3 style="margin-top: 20px;">Quick Test</h3>
+            <div class="quick-test-btns">
+                <button class="quick-btn" onclick="testQuick('AB:CD:EF:12')">👤 Test Admin</button>
+                <button class="quick-btn" onclick="testQuick('12:34:56:78')">🎓 Test Mahasiswa</button>
+                <button class="quick-btn" onclick="testQuick('XX:XX:XX:XX')">❌ Test Invalid</button>
+            </div>
+        </div>
+
+        <div id="responseCard" class="response-card">
+            <div class="response-header">
+                <div class="response-icon" id="responseIcon"></div>
+                <div class="response-title" id="responseTitle"></div>
+            </div>
+            <div id="responseContent"></div>
+        </div>
+
+        <div class="info-box">
+            <strong>ℹ️ Info:</strong><br>
+            Endpoint ini digunakan oleh ESP32 untuk mengirim RFID UID ke server.<br>
+            <strong>URL:</strong> POST /rfid<br>
+            <strong>Body:</strong> {"uid":"XX:XX:XX:XX"}
+        </div>
+    </div>
+
+    <script>
+        async function testRfid() {
+            const uid = document.getElementById('customUid').value.trim();
+            
+            if (!uid) {
+                alert('Masukkan UID terlebih dahulu!');
+                return;
+            }
+
+            // Show loading
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Mengirim...<span class="loading"></span>';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('/rfid', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ uid: uid })
+                });
+
+                const data = await response.json();
+                displayResponse(response.status, data);
+            } catch (error) {
+                displayResponse(0, { 
+                    success: false, 
+                    message: 'Error: ' + error.message 
+                });
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        async function testQuick(uid) {
+            document.getElementById('customUid').value = uid;
+            await testRfid();
+        }
+
+        function displayResponse(statusCode, data) {
+            const card = document.getElementById('responseCard');
+            const icon = document.getElementById('responseIcon');
+            const title = document.getElementById('responseTitle');
+            const content = document.getElementById('responseContent');
+
+            // Reset classes
+            card.className = 'response-card show';
+            
+            if (statusCode === 200 && data.success) {
+                // Success
+                card.classList.add('success');
+                icon.textContent = '✅';
+                title.textContent = 'Login Berhasil!';
+                
+                content.innerHTML = `
+                    <div class="response-data">
+                        <div class="data-row">
+                            <span class="data-label">Nama:</span>
+                            <span class="data-value">${data.user.nama || '-'}</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Username:</span>
+                            <span class="data-value">${data.user.username || '-'}</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Role:</span>
+                            <span class="data-value">${data.user.role || '-'}</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">NIM:</span>
+                            <span class="data-value">${data.user.nim || '-'}</span>
+                        </div>
+                    </div>
+                    <div class="code-block">${JSON.stringify(data, null, 2)}</div>
+                `;
+            } else {
+                // Error
+                card.classList.add('error');
+                icon.textContent = '❌';
+                title.textContent = 'Login Gagal';
+                
+                content.innerHTML = `
+                    <p style="margin-bottom: 10px;">${data.message || 'Terjadi kesalahan'}</p>
+                    ${data.uid ? `<p><strong>UID:</strong> ${data.uid}</p>` : ''}
+                    <div class="code-block">${JSON.stringify(data, null, 2)}</div>
+                `;
+            }
+
+            // Scroll to response
+            card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Allow Enter key to submit
+        document.getElementById('customUid').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                testRfid();
+            }
+        });
+    </script>
+</body>
+</html>

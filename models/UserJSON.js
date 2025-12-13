@@ -58,6 +58,7 @@ class UserJSON {
             role: userData.role, // 'admin' atau 'mahasiswa'
             email: userData.email || null,
             noTelepon: userData.noTelepon || null,
+            rfidUid: userData.rfidUid || null,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };
@@ -77,6 +78,12 @@ class UserJSON {
     async findById(id) {
         const users = this.readData();
         return users.find(u => u.id === id);
+    }
+
+    // Find user by RFID UID
+    async findByRfidUid(rfidUid) {
+        const users = this.readData();
+        return users.find(u => u.rfidUid === rfidUid);
     }
 
     // Verify password

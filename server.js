@@ -24,6 +24,32 @@ const WHATSAPP_ADMIN_NUMBER = process.env.WHATSAPP_ADMIN_NUMBER || '628234554647
 const CAMPUS_NAME = process.env.CAMPUS_NAME || 'Universitas';
 const CAMPUS_SHORT_NAME = process.env.CAMPUS_SHORT_NAME || 'UNI';
 
+// ⚡ In-memory store untuk RFID login (temporary solution)
+const rfidLoginStore = {
+    lastLogin: null,
+    setLogin: function(userData) {
+        this.lastLogin = {
+            user: userData,
+            timestamp: Date.now(),
+            consumed: false
+        };
+        console.log('✅ RFID login stored:', userData.username);
+    },
+    getAndConsume: function() {
+        if (!this.lastLogin || this.lastLogin.consumed) {
+            return null;
+        }
+        // Check jika login masih fresh (dalam 30 detik)
+        if (Date.now() - this.lastLogin.timestamp > 30000) {
+            this.lastLogin = null;
+            return null;
+        }
+        this.lastLogin.consumed = true;
+        console.log('✅ RFID login consumed:', this.lastLogin.user.username);
+        return this.lastLogin.user;
+    }
+};
+
 // Session configuration
 app.use(session({
     secret: process.env.SESSION_SECRET || 'peminjaman-proyektor-secret-key-2024',
@@ -341,7 +367,7 @@ app.get('/register', (req, res) => {
 // Register POST
 app.post('/register', async (req, res) => {
     try {
-        const { username, password, nama, nim, role, email, noTelepon } = req.body;
+        const { username, password, nama, nim, role, email, noTelepon, rfidUid } = req.body;
         
         // Validasi role
         if (!['admin', 'mahasiswa'].includes(role)) {
@@ -354,6 +380,14 @@ app.post('/register', async (req, res) => {
             return res.render('register', { error: 'Username sudah digunakan. Silakan pilih username lain.' });
         }
         
+        // Check apakah RFID UID sudah digunakan
+        if (rfidUid) {
+            const existingRfid = await User.findByRfidUid(rfidUid);
+            if (existingRfid) {
+                return res.render('register', { error: 'RFID UID sudah terdaftar. Silakan gunakan kartu RFID lain.' });
+            }
+        }
+        
         // Create user baru
         await User.create({
             username,
@@ -362,7 +396,8 @@ app.post('/register', async (req, res) => {
             nim: nim || null,
             role,
             email: email || null,
-            noTelepon: noTelepon || null
+            noTelepon: noTelepon || null,
+            rfidUid: rfidUid || null
         });
         
         // Redirect ke login dengan success message
@@ -384,6 +419,138 @@ app.get('/logout', (req, res) => {
         }
         res.redirect('/login');
     });
+});
+
+// ========== RFID Login Endpoint ==========
+// Endpoint untuk ESP32 kirim UID RFID
+app.post('/rfid', async (req, res) => {
+    try {
+        const { uid } = req.body;
+        
+        if (!uid) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'UID RFID tidak ditemukan' 
+            });
+        }
+        
+        console.log('🔖 RFID Tap detected:', uid);
+        
+        // Cari user berdasarkan RFID UID
+        const user = await User.findByRfidUid(uid);
+        
+        if (!user) {
+            console.log('❌ RFID UID tidak terdaftar:', uid);
+            return res.status(404).json({ 
+                success: false, 
+                message: 'RFID tidak terdaftar. Silakan registrasi terlebih dahulu.',
+                uid: uid
+            });
+        }
+        
+        console.log('✅ User ditemukan:', user.nama, '(' + user.role + ')');
+        
+        // ✅ Simpan ke in-memory store (untuk di-pickup oleh rfid-login page)
+        rfidLoginStore.setLogin({
+            id: user._id || user.id,
+            username: user.username,
+            nama: user.nama,
+            nim: user.nim || null,
+            role: user.role,
+            noTelepon: user.noTelepon || null
+        });
+        
+        console.log('✅ RFID login ready for pickup');
+        
+        return res.json({ 
+            success: true, 
+            message: 'Login berhasil!',
+            user: {
+                nama: user.nama,
+                username: user.username,
+                role: user.role,
+                nim: user.nim
+            },
+            redirectUrl: '/dashboard'
+        });
+        
+    } catch (error) {
+        console.error('❌ RFID Login error:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Terjadi kesalahan server',
+            error: error.message 
+        });
+    }
+});
+
+// Halaman RFID Login (untuk display/monitor)
+app.get('/rfid-login', (req, res) => {
+    // Jika sudah login, redirect ke dashboard
+    if (req.session && req.session.userId) {
+        console.log('✅ User already logged in, redirecting to dashboard');
+        return res.redirect('/dashboard');
+    }
+    res.render('rfid-login');
+});
+
+// Endpoint untuk web client menunggu RFID tap
+app.get('/rfid-status', async (req, res) => {
+    // Simple polling endpoint - bisa diganti dengan WebSocket untuk real-time
+    res.json({ message: 'Waiting for RFID tap...' });
+});
+
+// Endpoint untuk check apakah user sudah login (untuk polling dari rfid-login page)
+app.get('/api/check-session', (req, res) => {
+    // Check jika sudah ada session aktif
+    if (req.session && req.session.userId) {
+        console.log('✅ Session found for:', req.session.username);
+        return res.json({
+            isLoggedIn: true,
+            user: {
+                nama: req.session.nama,
+                username: req.session.username,
+                role: req.session.userRole,
+                nim: req.session.nim
+            }
+        });
+    }
+    
+    // Check apakah ada RFID login baru di store
+    const pendingLogin = rfidLoginStore.getAndConsume();
+    if (pendingLogin) {
+        console.log('🔖 Creating session from RFID login:', pendingLogin.username);
+        
+        // Buat session untuk user ini
+        req.session.userId = pendingLogin.id;
+        req.session.username = pendingLogin.username;
+        req.session.nama = pendingLogin.nama;
+        req.session.nim = pendingLogin.nim;
+        req.session.userRole = pendingLogin.role;
+        req.session.noTelepon = pendingLogin.noTelepon;
+        
+        // Simpan session
+        req.session.save((err) => {
+            if (err) {
+                console.error('❌ Session save error:', err);
+                return res.json({ isLoggedIn: false });
+            }
+            
+            console.log('✅ Session created for RFID user:', pendingLogin.username);
+            return res.json({
+                isLoggedIn: true,
+                user: {
+                    nama: pendingLogin.nama,
+                    username: pendingLogin.username,
+                    role: pendingLogin.role,
+                    nim: pendingLogin.nim
+                }
+            });
+        });
+    } else {
+        // No pending login
+        res.json({ isLoggedIn: false });
+    }
 });
 
 // ========== Protected Routes (Require Login) ==========
