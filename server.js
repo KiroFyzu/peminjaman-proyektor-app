@@ -317,7 +317,9 @@ app.post('/login', async (req, res) => {
         req.session.userId = user._id || user.id;
         req.session.username = user.username;
         req.session.nama = user.nama;
+        req.session.nim = user.nim || null;
         req.session.userRole = user.role;
+        req.session.noTelepon = user.noTelepon || null;
         
         // Redirect ke dashboard
         res.redirect('/dashboard');
@@ -339,7 +341,7 @@ app.get('/register', (req, res) => {
 // Register POST
 app.post('/register', async (req, res) => {
     try {
-        const { username, password, nama, role, email, noTelepon } = req.body;
+        const { username, password, nama, nim, role, email, noTelepon } = req.body;
         
         // Validasi role
         if (!['admin', 'mahasiswa'].includes(role)) {
@@ -357,6 +359,7 @@ app.post('/register', async (req, res) => {
             username,
             password,
             nama,
+            nim: nim || null,
             role,
             email: email || null,
             noTelepon: noTelepon || null

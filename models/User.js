@@ -27,6 +27,7 @@ class User {
             username: userData.username,
             password: hashedPassword,
             nama: userData.nama,
+            nim: userData.nim || null,
             role: userData.role, // 'admin' atau 'mahasiswa'
             email: userData.email || null,
             noTelepon: userData.noTelepon || null,

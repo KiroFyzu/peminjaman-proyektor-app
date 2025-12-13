@@ -34,7 +34,9 @@ function injectUserData(req, res, next) {
         id: req.session.userId,
         username: req.session.username,
         nama: req.session.nama,
+        nim: req.session.nim || null,
         role: req.session.userRole,
+        noTelepon: req.session.noTelepon || null,
         isAuthenticated: !!req.session.userId
     } : {
         isAuthenticated: false
