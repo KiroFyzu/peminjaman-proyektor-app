@@ -18,6 +18,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const WHATSAPP_API_BASE_URL = process.env.WHATSAPP_API_BASE_URL || 'https://waapi.radjaprint.site';
 const WHATSAPP_ADMIN_NUMBER = process.env.WHATSAPP_ADMIN_NUMBER || '6282345546475';
+const CAMPUS_NAME = process.env.CAMPUS_NAME || 'Universitas';
+const CAMPUS_SHORT_NAME = process.env.CAMPUS_SHORT_NAME || 'UNI';
 
 // Middleware
 app.use(express.json({ limit: '50mb' }));
@@ -261,7 +263,7 @@ const writeBookingData = (data) => {
 // Routes
 app.get('/', (req, res) => {
     const dbMode = isSimulation ? 'simulation' : 'production';
-    res.render('index', { dbMode });
+    res.render('index', { dbMode, campusName: CAMPUS_NAME, campusShortName: CAMPUS_SHORT_NAME });
 });
 
 app.get('/peminjaman', async (req, res) => {
@@ -270,17 +272,17 @@ app.get('/peminjaman', async (req, res) => {
         const proyektor = await Proyektor.getAll();
         const proyektorTersedia = proyektor.filter(p => p.status === 'tersedia');
         const dbMode = isSimulation ? 'simulation' : 'production';
-        res.render('peminjaman', { proyektor: proyektorTersedia, dbMode });
+        res.render('peminjaman', { proyektor: proyektorTersedia, dbMode, campusName: CAMPUS_NAME, campusShortName: CAMPUS_SHORT_NAME });
     } catch (error) {
         console.error('Error loading peminjaman:', error);
-        res.render('peminjaman', { proyektor: [], dbMode: isSimulation ? 'simulation' : 'production' });
+        res.render('peminjaman', { proyektor: [], dbMode: isSimulation ? 'simulation' : 'production', campusName: CAMPUS_NAME, campusShortName: CAMPUS_SHORT_NAME });
     }
 });
 
 app.get('/booking', async (req, res) => {
     try {
         const bookings = await Booking.getAll();
-        res.render('booking', { bookings });
+        res.render('booking', { bookings, campusName: CAMPUS_NAME, campusShortName: CAMPUS_SHORT_NAME });
     } catch (error) {
         console.error('Error loading booking:', error);
         res.status(500).send('Error loading booking');
@@ -290,7 +292,7 @@ app.get('/booking', async (req, res) => {
 app.get('/pengembalian', async (req, res) => {
     try {
         const peminjamanAktif = await Peminjaman.getActive();
-        res.render('pengembalian', { peminjaman: peminjamanAktif });
+        res.render('pengembalian', { peminjaman: peminjamanAktif, campusName: CAMPUS_NAME, campusShortName: CAMPUS_SHORT_NAME });
     } catch (error) {
         console.error('Error loading pengembalian:', error);
         res.status(500).send('Error loading pengembalian');
@@ -302,7 +304,7 @@ app.get('/dashboard', async (req, res) => {
         const data = await Peminjaman.getAll();
         const proyektor = await Proyektor.getAll();
         const dbMode = isSimulation ? 'simulation' : 'production';
-        res.render('dashboard', { peminjaman: data, proyektor, dbMode });
+        res.render('dashboard', { peminjaman: data, proyektor, dbMode, campusName: CAMPUS_NAME, campusShortName: CAMPUS_SHORT_NAME });
     } catch (error) {
         console.error('Error loading dashboard:', error);
         res.status(500).send('Error loading dashboard');

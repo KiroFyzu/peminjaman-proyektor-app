@@ -1,18 +1,19 @@
 [
   {
     "id": "PROJ001",
-    "kode": "EPX41-001",
+    "kode": "EPS-001",
     "jenis": "LCD Projector",
     "merk": "Epson",
-    "model": "EB-X41",
+    "model": "EB-001",
     "resolusi": "1024x768 (XGA)",
     "brightness": "3600 lumens",
-    "status": "tersedia",
+    "status": "dipinjam",
     "lokasi": "Ruang Penyimpanan A",
     "tahunPembelian": 2022,
     "kondisi": "baik",
     "terakhirDiservice": "2024-10-15",
-    "catatan": "Proyektor untuk ruang kelas besar"
+    "catatan": "Proyektor untuk ruang kelas besar",
+    "updatedAt": "2025-12-11T05:57:35.967Z"
   },
   {
     "id": "PROJ002",
@@ -27,7 +28,8 @@
     "tahunPembelian": 2021,
     "kondisi": "baik",
     "terakhirDiservice": "2024-09-20",
-    "catatan": "Proyektor standar untuk presentasi"
+    "catatan": "Proyektor standar untuk presentasi",
+    "updatedAt": "2025-11-18T08:10:19.383Z"
   },
   {
     "id": "PROJ003",
@@ -42,7 +44,8 @@
     "tahunPembelian": 2023,
     "kondisi": "sangat baik",
     "terakhirDiservice": "2024-11-01",
-    "catatan": "Proyektor terbaru dengan teknologi DLP"
+    "catatan": "Proyektor terbaru dengan teknologi DLP",
+    "updatedAt": "2025-11-16T01:14:37.846Z"
   },
   {
     "id": "PROJ004",
@@ -72,6 +75,7 @@
     "tahunPembelian": 2022,
     "kondisi": "baik",
     "terakhirDiservice": "2024-10-15",
-    "catatan": "Unit cadangan untuk ruang seminar"
+    "catatan": "Unit cadangan untuk ruang seminar",
+    "updatedAt": "2025-11-16T01:01:31.528Z"
   }
 ]
