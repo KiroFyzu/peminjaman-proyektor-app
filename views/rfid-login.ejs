@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RFID Login - Sistem Peminjaman Proyektor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .rfid-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .rfid-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+        }
+
+        .rfid-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .rfid-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .rfid-body {
+            padding: 40px 30px;
+        }
+
+        .rfid-icon {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        .rfid-icon svg {
+            width: 80px;
+            height: 80px;
+            fill: white;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 20px rgba(102, 126, 234, 0);
+            }
+        }
+
+        .status-text {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .instruction-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .user-info h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .user-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .user-detail:last-child {
+            border-bottom: none;
+        }
+
+        .user-detail label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .user-detail span {
+            color: #333;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="rfid-container">
+        <div class="rfid-header">
+            <h1>🔖 RFID Login</h1>
+            <p>Tap kartu RFID Anda untuk login otomatis</p>
+        </div>
+        <div class="rfid-body">
+            <div class="rfid-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                </svg>
+            </div>
+            
+            <div id="alertBox" class="alert"></div>
+            
+            <div id="waitingStatus">
+                <p class="status-text">Menunggu Kartu RFID...</p>
+                <p class="instruction-text">
+                    Tempelkan kartu RFID/NFC Anda pada reader<br>
+                    <small style="color: #999;">Pastikan ESP32 RFID reader sudah aktif</small>
+                </p>
+            </div>
+            
+            <div id="userInfo" class="user-info">
+                <h3>✅ Login Berhasil!</h3>
+                <div class="user-detail">
+                    <label>Nama:</label>
+                    <span id="userName">-</span>
+                </div>
+                <div class="user-detail">
+                    <label>Username:</label>
+                    <span id="userUsername">-</span>
+                </div>
+                <div class="user-detail">
+                    <label>Role:</label>
+                    <span id="userRole">-</span>
+                </div>
+                <div class="user-detail">
+                    <label>NIM:</label>
+                    <span id="userNim">-</span>
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="goToDashboard()">
+                        Buka Dashboard
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetPage()">
+                        Tap Lagi
+                    </button>
+                </div>
+            </div>
+            
+            <div class="back-link">
+                <a href="/login">← Login Manual (Username & Password)</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let lastUid = null;
+        let pollInterval = null;
+
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.className = 'alert alert-' + type;
+            alertBox.style.display = 'block';
+            
+            if (type === 'error') {
+                setTimeout(() => {
+                    alertBox.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function displayUserInfo(user) {
+            document.getElementById('userName').textContent = user.nama;
+            document.getElementById('userUsername').textContent = user.username;
+            document.getElementById('userRole').textContent = user.role.toUpperCase();
+            document.getElementById('userNim').textContent = user.nim || '-';
+            
+            document.getElementById('waitingStatus').style.display = 'none';
+            document.getElementById('userInfo').style.display = 'block';
+            
+            showAlert('Login berhasil! Redirect ke dashboard dalam 2 detik...', 'success');
+            
+            // Auto redirect ke dashboard setelah 2 detik
+            setTimeout(() => {
+                window.location.href = '/dashboard';
+            }, 2000);
+        }
+
+        function resetPage() {
+            document.getElementById('waitingStatus').style.display = 'block';
+            document.getElementById('userInfo').style.display = 'none';
+            document.getElementById('alertBox').style.display = 'none';
+            lastUid = null;
+        }
+
+        function goToDashboard() {
+            window.location.href = '/dashboard';
+        }
+
+        // Polling untuk menunggu RFID tap dari ESP32
+        let checkInterval = null;
+        
+        async function startPolling() {
+            // Check setiap 1 detik apakah user sudah login via RFID
+            checkInterval = setInterval(async () => {
+                try {
+                    const response = await fetch('/api/check-session');
+                    const data = await response.json();
+                    
+                    if (data.isLoggedIn) {
+                        clearInterval(checkInterval);
+                        displayUserInfo(data.user);
+                    }
+                } catch (error) {
+                    console.error('Polling error:', error);
+                }
+            }, 1000);
+        }
+
+        // Start polling saat halaman load
+        window.addEventListener('load', () => {
+            // Info untuk developer
+            console.log('RFID Login page loaded');
+            console.log('Waiting for RFID tap from ESP32...');
+            console.log('ESP32 should POST to: /rfid with body: {"uid": "XX:XX:XX:XX"}');
+            
+            // ✅ PENTING: Start polling untuk detect RFID login
+            startPolling();
+            console.log('✅ Polling started - checking session every 1 second');
+            
+            // Untuk demo, bisa test dengan curl:
+            // curl -X POST http://localhost:3040/rfid -H "Content-Type: application/json" -d '{"uid":"AB:CD:EF:12"}'
+        });
+
+        // Expose function untuk testing
+        window.testRfidLogin = function(uid) {
+            fetch('/rfid', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ uid: uid })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    displayUserInfo(data.user);
+                } else {
+                    showAlert(data.message, 'error');
+                }
+            })
+            .catch(err => {
+                showAlert('Error: ' + err.message, 'error');
+            });
+        };
+    </script>
+</body>
+</html>

@@ -31,6 +31,7 @@ class User {
             role: userData.role, // 'admin' atau 'mahasiswa'
             email: userData.email || null,
             noTelepon: userData.noTelepon || null,
+            rfidUid: userData.rfidUid || null,
             createdAt: new Date(),
             updatedAt: new Date()
         };
@@ -50,6 +51,12 @@ class User {
         await this.init();
         const ObjectId = require('mongodb').ObjectId;
         return await this.collection.findOne({ _id: new ObjectId(id) });
+    }
+
+    // Find user by RFID UID
+    async findByRfidUid(rfidUid) {
+        await this.init();
+        return await this.collection.findOne({ rfidUid: rfidUid });
     }
 
     // Verify password
