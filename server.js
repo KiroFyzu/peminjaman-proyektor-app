@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const session = require('express-session');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
@@ -13,6 +14,8 @@ const { isSimulation } = require('./config/database-mode');
 const Peminjaman = require('./models/PeminjamanAdapter');
 const Booking = require('./models/BookingAdapter');
 const Proyektor = require('./models/ProyektorAdapter');
+const User = require('./models/UserAdapter');
+const { isAuthenticated, isAdmin, injectUserData } = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,11 +24,26 @@ const WHATSAPP_ADMIN_NUMBER = process.env.WHATSAPP_ADMIN_NUMBER || '628234554647
 const CAMPUS_NAME = process.env.CAMPUS_NAME || 'Universitas';
 const CAMPUS_SHORT_NAME = process.env.CAMPUS_SHORT_NAME || 'UNI';
 
+// Session configuration
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'peminjaman-proyektor-secret-key-2024',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false, // Set true jika menggunakan HTTPS
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000 // 24 jam
+    }
+}));
+
 // Middleware
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
+
+// Inject user data ke semua views
+app.use(injectUserData);
 
 // Storage configuration untuk multer
 const storage = multer.diskStorage({
@@ -266,7 +284,107 @@ app.get('/', (req, res) => {
     res.render('index', { dbMode, campusName: CAMPUS_NAME, campusShortName: CAMPUS_SHORT_NAME });
 });
 
-app.get('/peminjaman', async (req, res) => {
+// ========== Authentication Routes ==========
+// Login page
+app.get('/login', (req, res) => {
+    // Redirect ke dashboard jika sudah login
+    if (req.session && req.session.userId) {
+        return res.redirect('/dashboard');
+    }
+    res.render('login', { error: null, success: null });
+});
+
+// Login POST
+app.post('/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        
+        // Cari user by username
+        const user = await User.findByUsername(username);
+        
+        if (!user) {
+            return res.render('login', { error: 'Username atau password salah', success: null });
+        }
+        
+        // Verify password
+        const isValid = await User.verifyPassword(password, user.password);
+        
+        if (!isValid) {
+            return res.render('login', { error: 'Username atau password salah', success: null });
+        }
+        
+        // Set session
+        req.session.userId = user._id || user.id;
+        req.session.username = user.username;
+        req.session.nama = user.nama;
+        req.session.userRole = user.role;
+        
+        // Redirect ke dashboard
+        res.redirect('/dashboard');
+    } catch (error) {
+        console.error('Login error:', error);
+        res.render('login', { error: 'Terjadi kesalahan saat login', success: null });
+    }
+});
+
+// Register page
+app.get('/register', (req, res) => {
+    // Redirect ke dashboard jika sudah login
+    if (req.session && req.session.userId) {
+        return res.redirect('/dashboard');
+    }
+    res.render('register', { error: null });
+});
+
+// Register POST
+app.post('/register', async (req, res) => {
+    try {
+        const { username, password, nama, role, email, noTelepon } = req.body;
+        
+        // Validasi role
+        if (!['admin', 'mahasiswa'].includes(role)) {
+            return res.render('register', { error: 'Role tidak valid. Pilih admin atau mahasiswa.' });
+        }
+        
+        // Check apakah username sudah ada
+        const existingUser = await User.findByUsername(username);
+        if (existingUser) {
+            return res.render('register', { error: 'Username sudah digunakan. Silakan pilih username lain.' });
+        }
+        
+        // Create user baru
+        await User.create({
+            username,
+            password,
+            nama,
+            role,
+            email: email || null,
+            noTelepon: noTelepon || null
+        });
+        
+        // Redirect ke login dengan success message
+        res.render('login', { 
+            error: null, 
+            success: 'Registrasi berhasil! Silakan login dengan akun Anda.' 
+        });
+    } catch (error) {
+        console.error('Register error:', error);
+        res.render('register', { error: error.message || 'Terjadi kesalahan saat registrasi' });
+    }
+});
+
+// Logout
+app.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Logout error:', err);
+        }
+        res.redirect('/login');
+    });
+});
+
+// ========== Protected Routes (Require Login) ==========
+app.get('/peminjaman', isAuthenticated, async (req, res) => {
     try {
         // Get available proyektor untuk dropdown
         const proyektor = await Proyektor.getAll();
@@ -279,7 +397,7 @@ app.get('/peminjaman', async (req, res) => {
     }
 });
 
-app.get('/booking', async (req, res) => {
+app.get('/booking', isAuthenticated, async (req, res) => {
     try {
         const bookings = await Booking.getAll();
         res.render('booking', { bookings, campusName: CAMPUS_NAME, campusShortName: CAMPUS_SHORT_NAME });
@@ -289,7 +407,7 @@ app.get('/booking', async (req, res) => {
     }
 });
 
-app.get('/pengembalian', async (req, res) => {
+app.get('/pengembalian', isAuthenticated, async (req, res) => {
     try {
         const peminjamanAktif = await Peminjaman.getActive();
         res.render('pengembalian', { peminjaman: peminjamanAktif, campusName: CAMPUS_NAME, campusShortName: CAMPUS_SHORT_NAME });
@@ -299,7 +417,7 @@ app.get('/pengembalian', async (req, res) => {
     }
 });
 
-app.get('/dashboard', async (req, res) => {
+app.get('/dashboard', isAuthenticated, async (req, res) => {
     try {
         const data = await Peminjaman.getAll();
         const proyektor = await Proyektor.getAll();
@@ -311,8 +429,8 @@ app.get('/dashboard', async (req, res) => {
     }
 });
 
-// API Endpoints
-app.post('/api/peminjaman', async (req, res) => {
+// API Endpoints (Protected - memerlukan login)
+app.post('/api/peminjaman', isAuthenticated, async (req, res) => {
     try {
         const { nama, kelas, namaDosen, jamKuliah, merkProyektor, noTelepon, fotoBukti, nim, jurusan, mataKuliah, jamMulai } = req.body;
         
@@ -348,7 +466,7 @@ app.post('/api/peminjaman', async (req, res) => {
     }
 });
 
-app.post('/api/pengembalian/:id', async (req, res) => {
+app.post('/api/pengembalian/:id', isAuthenticated, async (req, res) => {
     try {
         const { id } = req.params;
         const { jamSelesai, fotoBukti } = req.body;
@@ -385,7 +503,7 @@ app.post('/api/pengembalian/:id', async (req, res) => {
     }
 });
 
-app.get('/api/peminjaman', async (req, res) => {
+app.get('/api/peminjaman', isAuthenticated, async (req, res) => {
     try {
         const data = await Peminjaman.getAll();
         res.json(data);
@@ -395,7 +513,7 @@ app.get('/api/peminjaman', async (req, res) => {
     }
 });
 
-app.get('/api/peminjaman/aktif', async (req, res) => {
+app.get('/api/peminjaman/aktif', isAuthenticated, async (req, res) => {
     try {
         const aktif = await Peminjaman.getActive();
         res.json(aktif);
@@ -405,7 +523,7 @@ app.get('/api/peminjaman/aktif', async (req, res) => {
     }
 });
 
-app.delete('/api/peminjaman/:id', async (req, res) => {
+app.delete('/api/peminjaman/:id', isAuthenticated, async (req, res) => {
     try {
         const { id } = req.params;
         const deleted = await Peminjaman.delete(id);
@@ -422,7 +540,7 @@ app.delete('/api/peminjaman/:id', async (req, res) => {
 });
 
 // API untuk mengirim pesan WhatsApp
-app.post('/api/send-whatsapp/:id', async (req, res) => {
+app.post('/api/send-whatsapp/:id', isAuthenticated, async (req, res) => {
     try {
         const { id } = req.params;
         const { customMessage } = req.body;
@@ -731,10 +849,20 @@ app.post('/api/search', async (req, res) => {
 
 // ============= BOOKING SYSTEM =============
 
-// Get all bookings
-app.get('/api/booking', async (req, res) => {
+// Get all bookings (admin semua, mahasiswa hanya miliknya)
+app.get('/api/booking', isAuthenticated, async (req, res) => {
     try {
         const bookings = await Booking.getAll();
+        
+        // Jika role mahasiswa, filter hanya booking miliknya berdasarkan nama
+        if (req.session.userRole === 'mahasiswa') {
+            const userBookings = bookings.filter(b => 
+                b.nama.toLowerCase() === req.session.nama.toLowerCase()
+            );
+            return res.json(userBookings);
+        }
+        
+        // Admin dapat melihat semua booking
         res.json(bookings);
     } catch (error) {
         console.error('Error getting bookings:', error);
@@ -743,7 +871,7 @@ app.get('/api/booking', async (req, res) => {
 });
 
 // Create new booking
-app.post('/api/booking', async (req, res) => {
+app.post('/api/booking', isAuthenticated, async (req, res) => {
     try {
         const { nama, nim, kelas, merkProyektor, tanggalBooking, jamMulai, jamSelesai, keperluan, noTelepon } = req.body;
         
@@ -766,8 +894,8 @@ app.post('/api/booking', async (req, res) => {
     }
 });
 
-// Update booking status
-app.put('/api/booking/:id', async (req, res) => {
+// Update booking status (hanya admin)
+app.put('/api/booking/:id', isAuthenticated, isAdmin, async (req, res) => {
     try {
         const { id } = req.params;
         const { status } = req.body;
@@ -785,8 +913,8 @@ app.put('/api/booking/:id', async (req, res) => {
     }
 });
 
-// Delete booking
-app.delete('/api/booking/:id', async (req, res) => {
+// Delete booking (hanya admin)
+app.delete('/api/booking/:id', isAuthenticated, isAdmin, async (req, res) => {
     try {
         const { id } = req.params;
         const deleted = await Booking.delete(id);
@@ -805,7 +933,7 @@ app.delete('/api/booking/:id', async (req, res) => {
 // ========== PROYEKTOR API ENDPOINTS ==========
 
 // Get all proyektor
-app.get('/api/proyektor', async (req, res) => {
+app.get('/api/proyektor', isAuthenticated, async (req, res) => {
     try {
         const proyektor = await Proyektor.getAll();
         res.json({ success: true, data: proyektor });
@@ -815,7 +943,7 @@ app.get('/api/proyektor', async (req, res) => {
 });
 
 // Get proyektor by ID
-app.get('/api/proyektor/:id', async (req, res) => {
+app.get('/api/proyektor/:id', isAuthenticated, async (req, res) => {
     try {
         const proyektor = await Proyektor.getById(req.params.id);
         if (!proyektor) {
