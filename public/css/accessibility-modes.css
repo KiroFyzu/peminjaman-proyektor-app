@@ -1,0 +1,556 @@
+/* ========================================
+   ACCESSIBILITY MODES CSS
+   ======================================== */
+
+/* Dark Mode */
+body.dark-mode {
+    background: linear-gradient(to bottom right, #0f172a, #1e293b) !important;
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode * {
+    border-color: #334155 !important;
+}
+
+body.dark-mode .bg-white {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode .bg-gray-50,
+body.dark-mode .bg-gray-100 {
+    background-color: #334155 !important;
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode .bg-gradient-to-br,
+body.dark-mode .bg-gradient-to-r {
+    background: #1e293b !important;
+}
+
+/* Text Colors - Dark Mode */
+body.dark-mode .text-gray-800,
+body.dark-mode .text-gray-700,
+body.dark-mode .text-gray-600,
+body.dark-mode .text-gray-500 {
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode .text-gray-400 {
+    color: #cbd5e1 !important;
+}
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6 {
+    color: #ffffff !important;
+}
+
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode li,
+body.dark-mode label,
+body.dark-mode td,
+body.dark-mode th {
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode .text-white {
+    color: #ffffff !important;
+}
+
+/* Navbar & Header - Dark Mode */
+body.dark-mode nav {
+    background-color: #0f172a !important;
+    border-bottom: 1px solid #334155 !important;
+}
+
+body.dark-mode .bg-gradient-to-r {
+    background: linear-gradient(to right, #1e3a8a, #1e293b) !important;
+}
+
+/* Cards & Containers - Dark Mode */
+body.dark-mode .rounded-xl,
+body.dark-mode .rounded-lg {
+    background-color: #1e293b !important;
+}
+
+body.dark-mode .shadow-lg,
+body.dark-mode .shadow-xl,
+body.dark-mode .shadow-2xl {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Forms - Dark Mode */
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+    background-color: #0f172a !important;
+    color: #f1f5f9 !important;
+    border-color: #475569 !important;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: #94a3b8 !important;
+}
+
+body.dark-mode input:focus,
+body.dark-mode select:focus,
+body.dark-mode textarea:focus {
+    border-color: #60a5fa !important;
+    background-color: #1e293b !important;
+}
+
+/* Buttons - Dark Mode */
+body.dark-mode button,
+body.dark-mode .btn {
+    color: #ffffff !important;
+}
+
+body.dark-mode .bg-indigo-600,
+body.dark-mode .bg-indigo-500 {
+    background-color: #4f46e5 !important;
+}
+
+body.dark-mode .bg-green-600,
+body.dark-mode .bg-green-500 {
+    background-color: #10b981 !important;
+}
+
+body.dark-mode .bg-blue-600,
+body.dark-mode .bg-blue-500 {
+    background-color: #3b82f6 !important;
+}
+
+body.dark-mode .bg-red-600,
+body.dark-mode .bg-red-500 {
+    background-color: #ef4444 !important;
+}
+
+body.dark-mode .bg-purple-600,
+body.dark-mode .bg-purple-500 {
+    background-color: #a855f7 !important;
+}
+
+body.dark-mode .bg-yellow-600,
+body.dark-mode .bg-yellow-500 {
+    background-color: #eab308 !important;
+}
+
+body.dark-mode .bg-gray-500 {
+    background-color: #64748b !important;
+}
+
+/* Status Colors - Dark Mode */
+body.dark-mode .bg-green-100 {
+    background-color: #064e3b !important;
+}
+
+body.dark-mode .text-green-700,
+body.dark-mode .text-green-600 {
+    color: #4ade80 !important;
+}
+
+body.dark-mode .bg-blue-100 {
+    background-color: #1e3a8a !important;
+}
+
+body.dark-mode .text-blue-700,
+body.dark-mode .text-blue-600 {
+    color: #60a5fa !important;
+}
+
+body.dark-mode .bg-red-100 {
+    background-color: #7f1d1d !important;
+}
+
+body.dark-mode .text-red-700,
+body.dark-mode .text-red-600 {
+    color: #f87171 !important;
+}
+
+body.dark-mode .bg-yellow-100 {
+    background-color: #713f12 !important;
+}
+
+body.dark-mode .text-yellow-700,
+body.dark-mode .text-yellow-600 {
+    color: #fbbf24 !important;
+}
+
+body.dark-mode .bg-purple-100 {
+    background-color: #581c87 !important;
+}
+
+body.dark-mode .text-purple-700,
+body.dark-mode .text-purple-600 {
+    color: #c084fc !important;
+}
+
+body.dark-mode .bg-orange-100 {
+    background-color: #7c2d12 !important;
+}
+
+body.dark-mode .text-orange-700,
+body.dark-mode .text-orange-600 {
+    color: #fb923c !important;
+}
+
+/* Tables - Dark Mode */
+body.dark-mode table {
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode thead {
+    background-color: #0f172a !important;
+}
+
+body.dark-mode tbody tr {
+    border-color: #334155 !important;
+}
+
+body.dark-mode tbody tr:hover {
+    background-color: #334155 !important;
+}
+
+/* Links - Dark Mode */
+body.dark-mode a {
+    color: #60a5fa !important;
+}
+
+body.dark-mode a:hover {
+    color: #93c5fd !important;
+}
+
+/* Footer - Dark Mode */
+body.dark-mode footer {
+    background-color: #0f172a !important;
+    color: #cbd5e1 !important;
+}
+
+/* Gradient Backgrounds - Dark Mode */
+body.dark-mode .from-purple-50,
+body.dark-mode .from-blue-50,
+body.dark-mode .from-green-50,
+body.dark-mode .from-indigo-50 {
+    background-color: #1e293b !important;
+}
+
+body.dark-mode .to-pink-100,
+body.dark-mode .to-indigo-100 {
+    background-color: #1e293b !important;
+}
+
+/* Icons - Dark Mode */
+body.dark-mode i {
+    color: inherit !important;
+}
+
+body.dark-mode .text-indigo-600 i,
+body.dark-mode .text-green-600 i,
+body.dark-mode .text-blue-600 i,
+body.dark-mode .text-purple-600 i,
+body.dark-mode .text-red-600 i {
+    color: inherit !important;
+}
+
+/* High Contrast Mode */
+body.high-contrast {
+    background: #000000 !important;
+    color: #FFFF00 !important;
+}
+
+body.high-contrast * {
+    color: #FFFF00 !important;
+}
+
+body.high-contrast .bg-white,
+body.high-contrast .bg-gray-50,
+body.high-contrast .bg-gray-100 {
+    background-color: #000000 !important;
+    border: 2px solid #FFFF00 !important;
+}
+
+body.high-contrast nav {
+    background-color: #000000 !important;
+    border: 2px solid #FFFF00 !important;
+}
+
+body.high-contrast button,
+body.high-contrast .btn,
+body.high-contrast a.bg-indigo-600,
+body.high-contrast a.bg-green-500,
+body.high-contrast a.bg-blue-500,
+body.high-contrast a.bg-purple-500 {
+    background-color: #FFFF00 !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+    font-weight: bold !important;
+}
+
+body.high-contrast .text-indigo-600,
+body.high-contrast .text-green-600,
+body.high-contrast .text-blue-600,
+body.high-contrast .text-purple-600,
+body.high-contrast .text-red-600,
+body.high-contrast .text-yellow-600 {
+    color: #FFFF00 !important;
+}
+
+body.high-contrast input,
+body.high-contrast select,
+body.high-contrast textarea {
+    background-color: #000000 !important;
+    color: #FFFF00 !important;
+    border: 2px solid #FFFF00 !important;
+}
+
+/* Dyslexia-Friendly Mode */
+body.dyslexia-mode * {
+    font-family: 'OpenDyslexic', 'Comic Sans MS', 'Arial', sans-serif !important;
+    letter-spacing: 0.05em !important;
+    line-height: 1.8 !important;
+    word-spacing: 0.2em !important;
+}
+
+body.dyslexia-mode h1,
+body.dyslexia-mode h2,
+body.dyslexia-mode h3,
+body.dyslexia-mode h4 {
+    font-weight: bold !important;
+}
+
+body.dyslexia-mode p,
+body.dyslexia-mode li,
+body.dyslexia-mode span {
+    font-size: 1.1em !important;
+}
+
+/* Color Blind Mode (Protanopia/Deuteranopia friendly) */
+body.colorblind-mode .bg-green-500,
+body.colorblind-mode .bg-green-600,
+body.colorblind-mode .bg-green-100 {
+    background-color: #0088FF !important;
+}
+
+body.colorblind-mode .text-green-600,
+body.colorblind-mode .text-green-700 {
+    color: #000000 !important;
+}
+
+body.colorblind-mode .bg-red-500,
+body.colorblind-mode .bg-red-600,
+body.colorblind-mode .bg-red-100 {
+    background-color: #FF8800 !important;
+}
+
+body.colorblind-mode .text-red-600,
+body.colorblind-mode .text-red-700 {
+    color: #000000 !important;
+}
+
+body.colorblind-mode .from-green-700,
+body.colorblind-mode .to-emerald-700 {
+    --tw-gradient-from: #0088FF !important;
+    --tw-gradient-to: #0066CC !important;
+}
+
+body.colorblind-mode .border-green-500,
+body.colorblind-mode .border-red-500 {
+    border-color: #0088FF !important;
+}
+
+/* Large Text Mode */
+body.large-text * {
+    font-size: 1.3em !important;
+    line-height: 1.7 !important;
+}
+
+body.large-text h1 {
+    font-size: 2.5em !important;
+}
+
+body.large-text h2 {
+    font-size: 2em !important;
+}
+
+body.large-text h3 {
+    font-size: 1.7em !important;
+}
+
+body.large-text button,
+body.large-text input,
+body.large-text select {
+    padding: 1rem 1.5rem !important;
+}
+
+/* Accessibility Menu Styles */
+.accessibility-menu {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 9999;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+body.dark-mode .accessibility-menu {
+    background: #2d3748;
+    color: #e2e8f0;
+}
+
+body.high-contrast .accessibility-menu {
+    background: #000000;
+    border: 3px solid #FFFF00;
+}
+
+.accessibility-toggle {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 9998;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transition: all 0.3s ease;
+}
+
+.accessibility-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+body.high-contrast .accessibility-toggle {
+    background: #FFFF00;
+    color: #000000;
+    border: 3px solid #000000;
+}
+
+.accessibility-menu h3 {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #4a5568;
+}
+
+body.dark-mode .accessibility-menu h3 {
+    color: #e2e8f0;
+}
+
+body.high-contrast .accessibility-menu h3 {
+    color: #FFFF00;
+}
+
+.accessibility-menu button {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 2px solid #e2e8f0;
+    background: #f7fafc;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.accessibility-menu button:hover {
+    background: #edf2f7;
+    transform: translateX(-3px);
+}
+
+.accessibility-menu button.active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+body.dark-mode .accessibility-menu button {
+    background: #374151;
+    border-color: #4a5568;
+    color: #e2e8f0;
+}
+
+body.dark-mode .accessibility-menu button:hover {
+    background: #4a5568;
+}
+
+body.high-contrast .accessibility-menu button {
+    background: #000000;
+    border-color: #FFFF00;
+    color: #FFFF00;
+}
+
+body.high-contrast .accessibility-menu button:hover {
+    background: #FFFF00;
+    color: #000000;
+}
+
+/* Smooth transitions */
+body,
+.bg-white,
+nav,
+button,
+input,
+select {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Focus indicators for keyboard navigation */
+body.high-contrast *:focus {
+    outline: 3px solid #FFFF00 !important;
+    outline-offset: 2px;
+}
+
+*:focus-visible {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* Screen reader only text */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Loading OpenDyslexic Font */
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('https://cdn.jsdelivr.net/gh/antijingoist/opendyslexic@master/compiled/OpenDyslexic-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('https://cdn.jsdelivr.net/gh/antijingoist/opendyslexic@master/compiled/OpenDyslexic-Bold.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+}
