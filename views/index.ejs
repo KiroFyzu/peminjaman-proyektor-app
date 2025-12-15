@@ -117,14 +117,14 @@
             <!-- Card Pengembalian -->
             <div class="bg-white rounded-xl shadow-xl p-8 hover:shadow-2xl transition-all transform hover:-translate-y-2">
                 <div class="text-center">
-                    <div class="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-undo text-blue-600 text-3xl"></i>
+                    <div class="bg-indigo-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-undo text-indigo-600 text-3xl"></i>
                     </div>
                     <h3 class="text-2xl font-bold text-gray-800 mb-3">Kembalikan Proyektor</h3>
                     <p class="text-gray-600 mb-6">
                         Proses pengembalian proyektor dan update status peminjaman
                     </p>
-                    <a href="/pengembalian" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg transition inline-block">
+                    <a href="/pengembalian" class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 px-8 rounded-lg transition inline-block">
                         <i class="fas fa-check-circle mr-2"></i>
                         Proses Pengembalian
                     </a>
@@ -163,8 +163,8 @@
                     <p class="text-3xl font-bold text-green-600" id="peminjamanAktif">0</p>
                     <p class="text-gray-600 text-sm mt-1">Sedang Dipinjam</p>
                 </div>
-                <div class="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
-                    <p class="text-3xl font-bold text-blue-600" id="peminjamanSelesai">0</p>
+                <div class="text-center p-4 bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg">
+                    <p class="text-3xl font-bold text-indigo-600" id="peminjamanSelesai">0</p>
                     <p class="text-gray-600 text-sm mt-1">Sudah Dikembalikan</p>
                 </div>
                 <div class="text-center p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg">
@@ -181,8 +181,8 @@
             </h3>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-xl transition">
-                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-mobile-alt text-blue-600 text-2xl"></i>
+                    <div class="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-mobile-alt text-indigo-600 text-2xl"></i>
                     </div>
                     <h4 class="font-bold text-gray-800 mb-2">Notifikasi WhatsApp</h4>
                     <p class="text-gray-600 text-sm">Pemberitahuan otomatis melalui WhatsApp dengan foto bukti</p>
@@ -244,7 +244,7 @@
                 </div>
                 
                 <div class="text-center">
-                    <div class="bg-gradient-to-br from-blue-400 to-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg">
+                    <div class="bg-gradient-to-br from-indigo-400 to-indigo-600 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold shadow-lg">
                         2
                     </div>
                     <h4 class="font-bold text-lg text-gray-800 mb-2">Gunakan Proyektor</h4>
@@ -311,22 +311,16 @@
         // Load statistics
         async function loadStats() {
             try {
-                const response = await fetch('/api/peminjaman');
-                const data = await response.json();
+                const response = await fetch('/api/public/stats');
+                const result = await response.json();
                 
-                const today = new Date().toDateString();
-                const totalPeminjaman = data.length;
-                const peminjamanAktif = data.filter(item => item.status === 'dipinjam').length;
-                const peminjamanSelesai = data.filter(item => item.status === 'dikembalikan').length;
-                const hariIni = data.filter(item => {
-                    const itemDate = new Date(item.tanggalPeminjaman).toDateString();
-                    return itemDate === today;
-                }).length;
-                
-                document.getElementById('totalPeminjaman').textContent = totalPeminjaman;
-                document.getElementById('peminjamanAktif').textContent = peminjamanAktif;
-                document.getElementById('peminjamanSelesai').textContent = peminjamanSelesai;
-                document.getElementById('hariIni').textContent = hariIni;
+                if (result.success) {
+                    const stats = result.data;
+                    document.getElementById('totalPeminjaman').textContent = stats.totalPeminjaman;
+                    document.getElementById('peminjamanAktif').textContent = stats.peminjamanAktif;
+                    document.getElementById('peminjamanSelesai').textContent = stats.peminjamanSelesai;
+                    document.getElementById('hariIni').textContent = stats.hariIni;
+                }
             } catch (error) {
                 console.error('Error loading stats:', error);
             }
@@ -335,7 +329,7 @@
         // Load proyektor list
         async function loadProyektor() {
             try {
-                const response = await fetch('/api/proyektor');
+                const response = await fetch('/api/public/proyektor');
                 const result = await response.json();
                 const proyektor = result.data || [];
                 

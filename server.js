@@ -137,7 +137,7 @@ async function sendWhatsAppMessage(number, message) {
     
     console.log('📞 Formatted Number:', formattedNumber);
     
-    const response = await fetch(`${WHATSAPP_API_BASE_URL}/send-message`, {
+    const response = await fetch(`${WHATSAPP_API_BASE_URL}/api/whatsapp/send-message`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -172,7 +172,7 @@ async function sendWhatsAppMessage(number, message) {
     return result;
 }
 
-// WhatsApp API Function - Send File with Caption
+// WhatsApp API Function - Send Image with Caption
 async function sendWhatsAppFile(number, fileBase64, caption) {
     const formattedNumber = formatPhoneNumber(number);
     
@@ -181,69 +181,53 @@ async function sendWhatsAppFile(number, fileBase64, caption) {
     }
     
     console.log('📞 Formatted Number:', formattedNumber);
-    console.log('📎 Sending file with caption');
+    console.log('📎 Sending image with caption');
     console.log('📏 Base64 length:', fileBase64.length);
     
-    // Clean base64 dan convert ke buffer
-    const base64Data = fileBase64.replace(/^data:image\/\w+;base64,/, '');
-    const buffer = Buffer.from(base64Data, 'base64');
-    
-    console.log('📦 Buffer size:', buffer.length, 'bytes');
-    
-    // Detect file extension dari base64 header
-    let extension = 'jpg';
-    let mimeType = 'image/jpeg';
-    if (fileBase64.startsWith('data:image/png')) {
-        extension = 'png';
-        mimeType = 'image/png';
-    } else if (fileBase64.startsWith('data:image/jpeg') || fileBase64.startsWith('data:image/jpg')) {
-        extension = 'jpg';
-        mimeType = 'image/jpeg';
-    }
-    
-    console.log('🎨 File type:', extension, mimeType);
-    
-    // Simpan file sementara ke disk
+    // Simpan file sementara ke disk untuk generate public URL
     const tempDir = './public/uploads/temp';
     if (!fs.existsSync(tempDir)) {
         fs.mkdirSync(tempDir, { recursive: true });
         console.log('📁 Created temp directory');
     }
     
-    const tempFilename = `temp_${Date.now()}.${extension}`;
+    // Clean base64 dan convert ke buffer
+    const base64Data = fileBase64.replace(/^data:image\/\w+;base64,/, '');
+    const buffer = Buffer.from(base64Data, 'base64');
+    
+    // Detect file extension dari base64 header
+    let extension = 'jpg';
+    if (fileBase64.startsWith('data:image/png')) {
+        extension = 'png';
+    } else if (fileBase64.startsWith('data:image/jpeg') || fileBase64.startsWith('data:image/jpg')) {
+        extension = 'jpg';
+    }
+    
+    console.log('🎨 File type:', extension);
+    
+    const tempFilename = `whatsapp_${Date.now()}.${extension}`;
     const tempFilePath = path.join(tempDir, tempFilename);
     fs.writeFileSync(tempFilePath, buffer);
     
-    // Verify file exists and check size
     const fileStats = fs.statSync(tempFilePath);
     console.log('💾 Temp file saved:', tempFilePath);
-    console.log('📊 File size on disk:', fileStats.size, 'bytes');
+    console.log('📊 File size:', fileStats.size, 'bytes');
     
-    // Create form data dengan file stream
-    const form = new FormData();
-    form.append('number', formattedNumber);
-    
-    // Read file and append as buffer with proper options
-    const fileBuffer = fs.readFileSync(tempFilePath);
-    form.append('file', fileBuffer, {
-        filename: `foto_${Date.now()}.${extension}`,
-        contentType: mimeType,
-        knownLength: fileBuffer.length
-    });
-    
-    if (caption) {
-        form.append('caption', caption);
-        console.log('💬 Caption added, length:', caption.length);
-    }
-    
-    console.log('🚀 Sending to:', `${WHATSAPP_API_BASE_URL}/send-file`);
-    console.log('📋 Form headers:', form.getHeaders());
+    // Generate public URL untuk file
+    const imageUrl = `${process.env.BASE_URL || 'http://localhost:' + PORT}/uploads/temp/${tempFilename}`;
+    console.log('🔗 Image URL:', imageUrl);
     
     try {
-        const response = await fetch(`${WHATSAPP_API_BASE_URL}/send-file`, {
+        const response = await fetch(`${WHATSAPP_API_BASE_URL}/api/whatsapp/send-image`, {
             method: 'POST',
-            body: form,
-            headers: form.getHeaders()
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                number: formattedNumber,
+                imageUrl: imageUrl,
+                caption: caption || ''
+            })
         });
         
         console.log('🌐 API Response Status:', response.status, response.statusText);
@@ -271,20 +255,22 @@ async function sendWhatsAppFile(number, fileBase64, caption) {
                           (result.message && result.message.toLowerCase().includes('berhasil'));
         
         if (!isSuccess) {
-            throw new Error(result.message || 'Gagal mengirim file');
+            throw new Error(result.message || 'Gagal mengirim image');
         }
         
         return result;
     } finally {
-        // Hapus file temporary setelah dikirim
-        try {
-            if (fs.existsSync(tempFilePath)) {
-                fs.unlinkSync(tempFilePath);
-                console.log('🗑️ Temp file deleted:', tempFilePath);
+        // Hapus file temporary setelah beberapa saat (beri waktu API mengambil gambar)
+        setTimeout(() => {
+            try {
+                if (fs.existsSync(tempFilePath)) {
+                    fs.unlinkSync(tempFilePath);
+                    console.log('🗑️ Temp file deleted:', tempFilePath);
+                }
+            } catch (err) {
+                console.warn('⚠️ Failed to delete temp file:', err.message);
             }
-        } catch (err) {
-            console.warn('⚠️ Failed to delete temp file:', err.message);
-        }
+        }, 10000); // Hapus setelah 10 detik
     }
 }
 
@@ -320,23 +306,31 @@ app.get('/login', (req, res) => {
     res.render('login', { error: null, success: null });
 });
 
+// Login page tailwind
+app.get('/login-tailwind', (req, res) => {
+    // Redirect ke dashboard jika sudah login
+    if (req.session && req.session.userId) {
+        return res.redirect('/dashboard');
+    }
+    res.render('login-tailwind', { error: null, success: null });
+});
 // Login POST
 app.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
         
-        // Cari user by username
-        const user = await User.findByUsername(username);
+        // Cari user by username atau NIM
+        const user = await User.findByUsernameOrNim(username);
         
         if (!user) {
-            return res.render('login', { error: 'Username atau password salah', success: null });
+            return res.render('login', { error: 'Username/NIM atau password salah', success: null });
         }
         
         // Verify password
         const isValid = await User.verifyPassword(password, user.password);
         
         if (!isValid) {
-            return res.render('login', { error: 'Username atau password salah', success: null });
+            return res.render('login', { error: 'Username/NIM atau password salah', success: null });
         }
         
         // Set session
@@ -346,6 +340,8 @@ app.post('/login', async (req, res) => {
         req.session.nim = user.nim || null;
         req.session.userRole = user.role;
         req.session.noTelepon = user.noTelepon || null;
+        
+        console.log('✅ Login berhasil:', user.nama, '(via', username, ')');
         
         // Redirect ke dashboard
         res.redirect('/dashboard');
@@ -1096,6 +1092,50 @@ app.delete('/api/booking/:id', isAuthenticated, isAdmin, async (req, res) => {
         res.json({ success: true, message: 'Booking berhasil dihapus' });
     } catch (error) {
         console.error('Error deleting booking:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// ========== PUBLIC API ENDPOINTS (No Authentication Required) ==========
+
+// Public API: Get statistics for homepage
+app.get('/api/public/stats', async (req, res) => {
+    try {
+        const data = await Peminjaman.getAll();
+        
+        const today = new Date().toDateString();
+        const stats = {
+            totalPeminjaman: data.length,
+            peminjamanAktif: data.filter(item => item.status === 'dipinjam').length,
+            peminjamanSelesai: data.filter(item => item.status === 'dikembalikan').length,
+            hariIni: data.filter(item => {
+                const itemDate = new Date(item.tanggalPeminjaman).toDateString();
+                return itemDate === today;
+            }).length
+        };
+        
+        res.json({ success: true, data: stats });
+    } catch (error) {
+        console.error('Error getting public stats:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// Public API: Get proyektor list for homepage
+app.get('/api/public/proyektor', async (req, res) => {
+    try {
+        const proyektor = await Proyektor.getAll();
+        // Only return necessary fields for public view
+        const publicData = proyektor.map(p => ({
+            kode: p.kode,
+            merk: p.merk,
+            jenis: p.jenis,
+            status: p.status,
+            totalPeminjaman: p.totalPeminjaman || 0
+        }));
+        res.json({ success: true, data: publicData });
+    } catch (error) {
+        console.error('Error getting public proyektor:', error);
         res.status(500).json({ success: false, message: error.message });
     }
 });

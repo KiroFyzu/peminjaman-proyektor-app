@@ -74,6 +74,18 @@ class UserJSON {
         return users.find(u => u.username === username);
     }
 
+    // Find user by NIM
+    async findByNim(nim) {
+        const users = this.readData();
+        return users.find(u => u.nim === nim);
+    }
+
+    // Find user by username atau NIM
+    async findByUsernameOrNim(usernameOrNim) {
+        const users = this.readData();
+        return users.find(u => u.username === usernameOrNim || u.nim === usernameOrNim);
+    }
+
     // Find user by ID
     async findById(id) {
         const users = this.readData();

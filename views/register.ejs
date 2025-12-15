@@ -4,227 +4,136 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Sistem Peminjaman Proyektor</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .register-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-            max-width: 450px;
-            width: 100%;
-        }
-
-        .register-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-        }
-
-        .register-header h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-
-        .register-header p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .register-body {
-            padding: 40px 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .form-group small {
-            display: block;
-            margin-top: 5px;
-            color: #666;
-            font-size: 12px;
-        }
-
-        .btn-register {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .btn-register:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-register:active {
-            transform: translateY(0);
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-            color: #666;
-        }
-
-        .login-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-
-        .alert {
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        .alert-error {
-            background-color: #fee;
-            color: #c33;
-            border: 1px solid #fcc;
-        }
-
-        .back-link {
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        .back-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .back-link a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link href="/css/tailwind.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
-    <div class="register-container">
-        <div class="register-header">
-            <h1>📝 Register</h1>
-            <p>Buat akun baru untuk sistem peminjaman proyektor</p>
-        </div>
-        <div class="register-body">
-            <% if (typeof error !== 'undefined' && error) { %>
-                <div class="alert alert-error"><%= error %></div>
-            <% } %>
-            
-            <form action="/register" method="POST">
-                <div class="form-group">
-                    <label for="username">Username *</label>
-                    <input type="text" id="username" name="username" required>
-                    <small>Username untuk login</small>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Password *</label>
-                    <input type="password" id="password" name="password" required minlength="6">
-                    <small>Minimal 6 karakter</small>
-                </div>
-                
-                <div class="form-group">
-                    <label for="nama">Nama Lengkap *</label>
-                    <input type="text" id="nama" name="nama" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="nim">NIM</label>
-                    <input type="text" id="nim" name="nim" maxlength="11" pattern="[0-9]{11}" inputmode="numeric">
-                    <small>Khusus mahasiswa, masukkan 11 digit NIM (contoh: 60200123456)</small>
-                </div>
-                
-                <div class="form-group">
-                    <label for="role">Role *</label>
-                    <select id="role" name="role" required>
-                        <option value="">-- Pilih Role --</option>
-                        <option value="mahasiswa">Mahasiswa</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email">
-                    <small>Opsional</small>
-                </div>
-                
-                <div class="form-group">
-                    <label for="noTelepon">No Telepon</label>
-                    <input type="tel" id="noTelepon" name="noTelepon">
-                    <small>Format: 08xx atau 628xx</small>
-                </div>
-                
-                <div class="form-group">
-                    <label for="rfidUid">RFID UID (Tag NFC)</label>
-                    <input type="text" id="rfidUid" name="rfidUid" placeholder="Contoh: AB:CD:EF:12">
-                    <small>Opsional. Tap kartu RFID di reader untuk auto-fill, atau isi manual</small>
-                </div>
-                
-                <button type="submit" class="btn-register">Daftar</button>
-            </form>
-            
-            <div class="login-link">
-                Sudah punya akun? <a href="/login">Login di sini</a>
+<body class="min-h-screen bg-gray-100 text-gray-900 flex justify-center py-10">
+    <div class="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1">
+        <div class="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
+            <div class="flex justify-center">
+                <i class="fas fa-user-plus text-indigo-600 text-6xl"></i>
             </div>
-            <div class="back-link">
-                <a href="/">← Kembali ke Halaman Utama</a>
+            
+            <div class="mt-12 flex flex-col items-center">
+                <h1 class="text-2xl xl:text-3xl font-extrabold text-gray-800">
+                    Register
+                </h1>
+                <p class="text-gray-600 mt-2">Buat akun baru untuk sistem peminjaman proyektor</p>
+                
+                <div class="w-full flex-1 mt-8">
+                    <!-- Alert Messages -->
+                    <% if (typeof error !== 'undefined' && error) { %>
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6" role="alert">
+                            <div class="flex items-center">
+                                <i class="fas fa-exclamation-circle mr-2"></i>
+                                <span><%= error %></span>
+                            </div>
+                        </div>
+                    <% } %>
+
+                    <!-- Register Form -->
+                    <form action="/register" method="POST" class="mx-auto max-w-xs">
+                        <input
+                            class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                            type="text" 
+                            id="username"
+                            name="username"
+                            placeholder="Username"
+                            required />
+                        <p class="text-xs text-gray-500 mt-1 mb-4">Username untuk login</p>
+                        
+                        <input
+                            class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                            type="password" 
+                            id="password"
+                            name="password"
+                            placeholder="Password"
+                            required
+                            minlength="6" />
+                        <p class="text-xs text-gray-500 mt-1 mb-4">Minimal 6 karakter</p>
+                        
+                        <input
+                            class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                            type="text" 
+                            id="nama"
+                            name="nama"
+                            placeholder="Nama Lengkap"
+                            required />
+                        
+                        <input
+                            class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
+                            type="text" 
+                            id="nim"
+                            name="nim"
+                            placeholder="NIM (11 digit)"
+                            maxlength="11"
+                            pattern="[0-9]{11}"
+                            inputmode="numeric" />
+                        <p class="text-xs text-gray-500 mt-1 mb-4">Khusus mahasiswa (contoh: 60200123456)</p>
+                        
+                        <select
+                            class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                            id="role"
+                            name="role"
+                            required>
+                            <option value="">-- Pilih Role --</option>
+                            <option value="mahasiswa">Mahasiswa</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        
+                        <input
+                            class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
+                            type="email" 
+                            id="email"
+                            name="email"
+                            placeholder="Email (Opsional)" />
+                        
+                        <input
+                            class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
+                            type="tel" 
+                            id="noTelepon"
+                            name="noTelepon"
+                            placeholder="No Telepon (Opsional)" />
+                        <p class="text-xs text-gray-500 mt-1 mb-4">Format: 08xx atau 628xx</p>
+                        
+                        <input
+                            class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                            type="text" 
+                            id="rfidUid"
+                            name="rfidUid"
+                            placeholder="RFID UID (Contoh: AB:CD:EF:12)" />
+                        <p class="text-xs text-gray-500 mt-1 mb-5">Tap kartu RFID atau isi manual (Opsional)</p>
+                        
+                        <button
+                            type="submit"
+                            class="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            <span>Daftar Sekarang</span>
+                        </button>
+                    </form>
+
+                    <!-- Login Link -->
+                    <p class="mt-8 text-sm text-gray-600 text-center">
+                        Sudah punya akun?
+                        <a href="/login" class="text-indigo-600 hover:text-indigo-800 font-semibold border-b border-indigo-500 border-dotted">
+                            Login di sini
+                        </a>
+                    </p>
+                    
+                    <!-- Back Link -->
+                    <p class="mt-4 text-sm text-center">
+                        <a href="/" class="text-gray-600 hover:text-gray-800">
+                            <i class="fas fa-arrow-left mr-1"></i> Kembali ke Halaman Utama
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Side Image -->
+        <div class="flex-1 bg-indigo-100 text-center hidden lg:flex">
+            <div class="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat"
+                style="background-image: url('https://storage.googleapis.com/devitary-image-host.appspot.com/15848031292911696601-undraw_designer_life_w96d.svg');">
             </div>
         </div>
     </div>
