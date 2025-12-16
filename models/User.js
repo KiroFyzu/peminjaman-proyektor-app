@@ -46,6 +46,23 @@ class User {
         return await this.collection.findOne({ username });
     }
 
+    // Find user by NIM
+    async findByNim(nim) {
+        await this.init();
+        return await this.collection.findOne({ nim });
+    }
+
+    // Find user by username atau NIM
+    async findByUsernameOrNim(usernameOrNim) {
+        await this.init();
+        return await this.collection.findOne({
+            $or: [
+                { username: usernameOrNim },
+                { nim: usernameOrNim }
+            ]
+        });
+    }
+
     // Find user by ID
     async findById(id) {
         await this.init();
